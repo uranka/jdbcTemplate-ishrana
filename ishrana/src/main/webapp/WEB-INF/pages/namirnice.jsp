@@ -1,11 +1,6 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Win10
-  Date: 10/21/2017
-  Time: 5:54 PM
-  To change this template use File | Settings | File Templates.
---%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <html>
 <head>
     <title>Namirnice</title>
@@ -21,22 +16,16 @@
         <th>ugljeni-hidrati</th>
         <th>kategorija</th>
     </tr>
-    <tr>
-        <td>${namirnice[0].naziv}</td>
-        <td>${namirnice[0].kcal}</td>
-        <td>${namirnice[0].p}</td>
-        <td>${namirnice[0].m}</td>
-        <td>${namirnice[0].uh}</td>
-        <td>${namirnice[0].kategorija}</td>
-    </tr>
-    <tr>
-        <td>${namirnice[1].naziv}</td>
-        <td>${namirnice[1].kcal}</td>
-        <td>${namirnice[1].p}</td>
-        <td>${namirnice[1].m}</td>
-        <td>${namirnice[1].uh}</td>
-        <td>${namirnice[1].kategorija}</td>
-    </tr>
+    <c:forEach var="namirnica" items="${namirnice}">
+        <tr>
+            <td>${namirnica.naziv}</td>
+            <td>${namirnica.kcal}</td>
+            <td>${namirnica.p}</td>
+            <td>${namirnica.m}</td>
+            <td>${namirnica.uh}</td>
+            <td>${namirnica.kategorija}</td>
+        </tr>
+    </c:forEach>
 </table>
 
 </body>

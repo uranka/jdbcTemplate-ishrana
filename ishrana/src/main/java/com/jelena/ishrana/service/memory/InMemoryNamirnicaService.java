@@ -25,6 +25,7 @@ public class InMemoryNamirnicaService implements NamirnicaService {
         n1.setUh(12);
         n1.setNamirnica_id(sequence.getAndIncrement());
         map.put(n1.getNamirnica_id(), n1);
+
         Namirnica n2 = new Namirnica();
         n2.setNaziv("jogurt 2.8% mm");
         n2.setKategorija("mleko i mlečni proizvodi");
@@ -34,6 +35,16 @@ public class InMemoryNamirnicaService implements NamirnicaService {
         n2.setUh(5.0);
         n2.setNamirnica_id(sequence.getAndIncrement());
         map.put(n2.getNamirnica_id(), n2);
+
+        Namirnica n3 = new Namirnica();
+        n3.setNaziv("jabuka");
+        n3.setKategorija("voće");
+        n3.setKcal(48);
+        n3.setM(0.8);
+        n3.setP(0.5);
+        n3.setUh(12.0);
+        n3.setNamirnica_id(sequence.getAndIncrement());
+        map.put(n3.getNamirnica_id(), n3);
     }
 
     @Override
