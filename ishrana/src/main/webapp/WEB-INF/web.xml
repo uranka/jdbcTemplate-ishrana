@@ -3,23 +3,20 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
 http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
 
+
   <!-- Spring Dispatcher Servlet -->
   <servlet>
     <servlet-name>ishrana</servlet-name>
     <servlet-class>
       org.springframework.web.servlet.DispatcherServlet
     </servlet-class>
-    <init-param>
-      <param-name>contextConfigLocation</param-name>
-      <param-value></param-value>
-    </init-param>
+
     <load-on-startup>1</load-on-startup>
   </servlet>
 
   <servlet-mapping>
     <servlet-name>ishrana</servlet-name>
-    <url-pattern>*.do</url-pattern>
-    <url-pattern>/home</url-pattern>
+    <url-pattern>/</url-pattern>
   </servlet-mapping>
 
 </web-app>
