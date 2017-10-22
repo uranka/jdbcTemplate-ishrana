@@ -15,6 +15,8 @@
         <th>masti</th>
         <th>ugljeni-hidrati</th>
         <th>kategorija</th>
+        <th></th>
+        <th></th>
     </tr>
     <c:forEach var="namirnica" items="${namirnice}">
         <tr>
@@ -24,8 +26,15 @@
             <td>${namirnica.m}</td>
             <td>${namirnica.uh}</td>
             <td>${namirnica.kategorija}</td>
+            <td>izmeni</td>
+            <td>obriši</td>
         </tr>
     </c:forEach>
+    <tr >
+        <td colspan="7"></td>
+        <td>dodaj</td>
+    </tr>
+
 </table>
 
 </body>

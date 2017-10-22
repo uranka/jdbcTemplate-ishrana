@@ -3,10 +3,7 @@ package com.jelena.ishrana.service.memory;
 import com.jelena.ishrana.model.Namirnica;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Service
@@ -54,6 +51,18 @@ public class InMemoryNamirnicaService implements NamirnicaService {
 
     @Override
     public List<Namirnica> findByCategory(String category) {
-        return null;
+
+        List<Namirnica> lst = new ArrayList<>();
+
+        Set<Map.Entry<Long, Namirnica>> entries = map.entrySet();
+        for ( Map.Entry<Long, Namirnica> currentEntry : entries ){
+            Long key = currentEntry.getKey();
+            Namirnica value = currentEntry.getValue();
+            System.out.println("key=" + key + ", value=" + value);
+            if (value.getKategorija().equalsIgnoreCase(category)) {
+                lst.add(value);
+            }
+        }
+        return lst;
     }
 }

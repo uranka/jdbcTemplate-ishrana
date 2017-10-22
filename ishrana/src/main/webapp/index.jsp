@@ -4,7 +4,7 @@
 <body>
 
 <h2>Hello world!</h2>
-<a href="${pageContext.request.contextPath}/namirnice">Namirnice</a>
+<a href="${pageContext.request.contextPath}/namirnice/all">Namirnice</a>
 
 </body>
 </html>
