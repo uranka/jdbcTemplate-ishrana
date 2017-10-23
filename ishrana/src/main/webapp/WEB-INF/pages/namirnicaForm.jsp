@@ -1,20 +1,26 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <!DOCTYPE html>
+<html>
 <head>
     <title>Namirnica edit</title>
 </head>
 <body>
 <h1>Unesi/izmeni namirnicu</h1>
 
-<form:form modelAttribute="namirnica" action="result.do" >
+<c:url var="action" value="/namirnice" />
+<form:form modelAttribute="namirnica" method="POST"  action="${action}">
+
 <table border="1" cellpadding="10">
     <tr>
         <td><form:label path="naziv">Naziv</form:label></td>
         <td><form:input path="naziv"/></td>
     </tr>
 
-    <!-- da postavim skriveno polje koje prenosi id namirnice -->
+    <!--  skriveno polje koje prenosi id namirnice -->
+    <form:hidden path="namirnica_id" />
 
     <tr>
         <td><form:label path="kcal">Energija(kcal):</form:label></td>
@@ -39,11 +45,12 @@
     </tr>
     <tr>
         <td>
-            <input type="submit" value="Snimi" />
+            <input type="submit" name="save_button" value="Snimi" />
         </td>
         <td>
-            <input type="button" value="Odustani" />
+            <input type="submit" name="cancel_button" value="Odustani" />
         </td>
+
     </tr>
 </table>
 </form:form>

@@ -70,4 +70,16 @@ public class InMemoryNamirnicaService implements NamirnicaService {
     public Namirnica findOne(Long id) {
         return map.get(id);
     }
+
+    // if namirnica does not have id give it id and save it
+    // otherwise just save it with its id
+    @Override
+    public Namirnica save(Namirnica namirnica) {
+        if (namirnica.getNamirnica_id() == null) {
+            namirnica.setNamirnica_id(sequence.getAndIncrement());
+            System.out.println("**************");
+        }
+        map.put(namirnica.getNamirnica_id(), namirnica);
+        return namirnica;
+    }
 }

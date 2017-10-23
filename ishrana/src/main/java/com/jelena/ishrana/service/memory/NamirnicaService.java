@@ -8,4 +8,5 @@ public interface NamirnicaService {
     List<Namirnica> findAll();
     List<Namirnica> findByCategory (String category);
     Namirnica findOne(Long id);
+    Namirnica save(Namirnica namirnica);
 }

@@ -3,7 +3,7 @@ package com.jelena.ishrana.model;
 
 public class Namirnica {
 
-    private long namirnica_id;
+    private Long namirnica_id;
     private String naziv;
     private double kcal;
     private double p;
@@ -12,7 +12,7 @@ public class Namirnica {
     private String kategorija;
 
 
-    public long getNamirnica_id() {
+    public Long getNamirnica_id() {
         return namirnica_id;
     }
     public void setNamirnica_id(long namirnica_id) {
