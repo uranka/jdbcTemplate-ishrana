@@ -65,4 +65,9 @@ public class InMemoryNamirnicaService implements NamirnicaService {
         }
         return lst;
     }
+
+    @Override
+    public Namirnica findOne(Long id) {
+        return map.get(id);
+    }
 }
