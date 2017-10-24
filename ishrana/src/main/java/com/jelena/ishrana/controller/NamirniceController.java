@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,6 +25,7 @@ public class NamirniceController {
     private static final String[] categories = { "voće", "povrće",
             "mleko i mlečni proizvodi", "meso", "masti"};
 
+
     @RequestMapping("/all")
     public String vratiNamirnice(Model model) {
         System.out.println("inside vratiNamirnice method");
@@ -36,7 +38,7 @@ public class NamirniceController {
     // http://localhost:8080/ishrana/namirnice/mleko i mlečni proizvodi
     @RequestMapping("/{category}")
     public String vratiNamirnicePoKategoriji(Model model, @PathVariable("category") String category) {
-        System.out.println("inside vvvv method");
+        System.out.println("inside vratiNamirnicePoKategoriji method");
         List<Namirnica> lst = namirnicaService.findByCategory(category);
         model.addAttribute("namirnice", lst);
         return "namirnice";
@@ -51,9 +53,14 @@ public class NamirniceController {
         return "namirnicaForm";
     }
 
+
+    // @ModelAttribute indicates that it indicates the argument should be retrieved from the model.
+    // @ModelAttribute means supply this object to a Controller method
+
     // snimanje namirnice i redirekcija na stranicu koja prikazuje sve namirnice
     @RequestMapping(method = RequestMethod.POST)
-    public String post(Namirnica namirnica, HttpServletRequest request) {
+    public String post(@ModelAttribute("namirnica") Namirnica namirnica, HttpServletRequest request) {
+    //public String post(Namirnica namirnica, HttpServletRequest request) {
         System.out.println("inside post method");
         System.out.println(namirnica);
         // ako je pritisnut button sa imenom save_button onda snimi inace ne
@@ -61,6 +68,25 @@ public class NamirniceController {
             namirnicaService.save(namirnica);
         }
         return "redirect:namirnice/all";
+    }
+
+    @RequestMapping("/add")
+    public String dodajNovuNamirnicu(Model model) {
+        System.out.println("inside dodajNovuNamirnicu method");
+        Namirnica namirnica = new Namirnica();
+
+        // problem kad se ne postavi id namirnice!!!!!!!!!!!!
+        // dobija se prilikom slanja forme 400 bad request
+        // zasto forma ne moze da salje za id koje je hidden field null vrednost???
+        // postavila sam na 0 umesto da bude null sto inace bude posle new Namirnica()
+        // pa nek joj se u save metodi(InMemoryNamirnicaService) dodeli pravi id, ovo je privremeni
+
+        namirnica.setNamirnica_id(0);
+
+        System.out.println(namirnica);
+        model.addAttribute("namirnica", namirnica);
+        model.addAttribute("kategorije", categories);
+        return "namirnicaForm";
     }
 }
 

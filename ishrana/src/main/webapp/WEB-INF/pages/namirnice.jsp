@@ -32,7 +32,7 @@
     </c:forEach>
     <tr >
         <td colspan="7"></td>
-        <td>dodaj</td>
+        <td><a href="${pageContext.request.contextPath}/namirnice/add">dodaj</a></td>
     </tr>
 
 </table>

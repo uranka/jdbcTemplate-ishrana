@@ -73,9 +73,12 @@ public class InMemoryNamirnicaService implements NamirnicaService {
 
     // if namirnica does not have id give it id and save it
     // otherwise just save it with its id
+    // sad to nema id sam prebacila u id je nula zbog problema sa slanjem
+    // forme u kojoj je id na null
     @Override
     public Namirnica save(Namirnica namirnica) {
-        if (namirnica.getNamirnica_id() == null) {
+        //if (namirnica.getNamirnica_id() == null) {
+        if (namirnica.getNamirnica_id() == 0) {
             namirnica.setNamirnica_id(sequence.getAndIncrement());
             System.out.println("**************");
         }
