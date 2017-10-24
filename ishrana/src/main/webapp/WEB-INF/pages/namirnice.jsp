@@ -27,7 +27,7 @@
             <td>${namirnica.uh}</td>
             <td>${namirnica.kategorija}</td>
             <td><a href="${pageContext.request.contextPath}/namirnice/edit/${namirnica.namirnica_id}">izmeni</a></td>
-            <td>obriši</td>
+            <td><a href="${pageContext.request.contextPath}/namirnice/remove/${namirnica.namirnica_id}">obriši</a></td>
         </tr>
     </c:forEach>
     <tr >

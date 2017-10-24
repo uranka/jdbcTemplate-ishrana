@@ -9,4 +9,5 @@ public interface NamirnicaService {
     List<Namirnica> findByCategory (String category);
     Namirnica findOne(Long id);
     Namirnica save(Namirnica namirnica);
+    void remove(Long id) throws IllegalArgumentException;
 }

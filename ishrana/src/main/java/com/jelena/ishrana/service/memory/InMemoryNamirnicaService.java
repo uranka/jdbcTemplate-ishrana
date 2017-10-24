@@ -85,4 +85,12 @@ public class InMemoryNamirnicaService implements NamirnicaService {
         map.put(namirnica.getNamirnica_id(), namirnica);
         return namirnica;
     }
+
+    @Override
+    public void remove(Long id) throws IllegalArgumentException {
+        Namirnica removed = map.remove(id);
+        if (removed == null) {
+            throw new IllegalArgumentException("Removing unexisting namirnica with id=" + id);
+        }
+    }
 }

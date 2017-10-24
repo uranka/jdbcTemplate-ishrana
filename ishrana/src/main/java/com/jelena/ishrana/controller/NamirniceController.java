@@ -25,6 +25,15 @@ public class NamirniceController {
     private static final String[] categories = { "voće", "povrće",
             "mleko i mlečni proizvodi", "meso", "masti"};
 
+/*
+    @RequestMapping("/")
+    public String vratiNamirnice1(Model model) {
+        System.out.println("inside vratiNamirnice method");
+        List<Namirnica> lst = namirnicaService.findAll();
+        model.addAttribute("namirnice", lst);
+        return "namirnice";
+    }
+*/
 
     @RequestMapping("/all")
     public String vratiNamirnice(Model model) {
@@ -67,7 +76,7 @@ public class NamirniceController {
         if (request.getParameter("save_button") != null) {
             namirnicaService.save(namirnica);
         }
-        return "redirect:namirnice/all";
+        return "redirect:namirnice/all"; // daje http://localhost:8080/ishrana/namirnice/all GET metod
     }
 
     @RequestMapping("/add")
@@ -87,6 +96,21 @@ public class NamirniceController {
         model.addAttribute("namirnica", namirnica);
         model.addAttribute("kategorije", categories);
         return "namirnicaForm";
+    }
+
+
+    @RequestMapping(value="/remove/{namirnica_id}", method = RequestMethod.GET)
+    public String remove(@PathVariable("namirnica_id") Long namirnica_id) {
+        System.out.println("inside remove method, namirnica_id: " + namirnica_id);
+        namirnicaService.remove(namirnica_id);
+       // return "redirect:.."; // vraca na namirnice, a treba na namirnice +all, ubacila sam vratiNamirnice1
+        // koji radi isto sto i vratiNamirnice samo za mapping bez all, brisem to i resavam ovako:
+
+        return "redirect:/namirnice/all"; // vidi HeadFirstServlets, str. 170
+        //The forward slash at the beginning means relative to the root of this web Container
+        //return "redirect:namirnice/all";
+        // ovo ne moze jer daje http://localhost:8080/ishrana/namirnice/remove/namirnice/all
+        //if you don’t use a forward slash, that part of the path is prepended
     }
 }
 
