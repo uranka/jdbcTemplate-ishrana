@@ -25,16 +25,6 @@ public class NamirniceController {
     private static final String[] categories = { "voće", "povrće",
             "mleko i mlečni proizvodi", "meso", "masti"};
 
-/*
-    @RequestMapping("/")
-    public String vratiNamirnice1(Model model) {
-        System.out.println("inside vratiNamirnice method");
-        List<Namirnica> lst = namirnicaService.findAll();
-        model.addAttribute("namirnice", lst);
-        return "namirnice";
-    }
-*/
-
     @RequestMapping("/all")
     public String vratiNamirnice(Model model) {
         System.out.println("inside vratiNamirnice method");
