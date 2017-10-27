@@ -1,5 +1,6 @@
 package com.jelena.ishrana.model;
 
+import java.util.List;
 import java.util.Map;
 
 public class Recept {
@@ -17,12 +18,15 @@ public class Recept {
 // Namirnica je jedinstvena ona je kljuc, a kolicina nije, ona je value
 // recept se pravi od namirnica koje postoje u bazi
 
-    private Map<Namirnica, Integer> mapaNamirnica;
+   // private Map<Namirnica, Integer> mapaNamirnica;
 
-    public long getRecept_id() {
+    private List<Namirnica> listaNamirnica;
+    private List<Integer> listaKolicina;
+
+    public Long getRecept_id() {
         return recept_id;
     }
-    public void setRecept_id(long recept_id) {
+    public void setRecept_id(Long recept_id) {
         this.recept_id = recept_id;
     }
     public String getNaziv() {
@@ -47,19 +51,40 @@ public class Recept {
     public void setVremeKuvanja(int vremeKuvanja) {
         this.vremeKuvanja = vremeKuvanja;
     }
+//
+//    public Map<Namirnica, Integer> getMapaNamirnica() {
+//        return mapaNamirnica;
+//    }
+//    public void setMapaNamirnica(Map<Namirnica, Integer> mapaNamirnica) {
+//        this.mapaNamirnica = mapaNamirnica;
+//    }
 
-    public Map<Namirnica, Integer> getMapaNamirnica() {
-        return mapaNamirnica;
+
+    public List<Namirnica> getListaNamirnica() {
+        return listaNamirnica;
     }
-    public void setMapaNamirnica(Map<Namirnica, Integer> mapaNamirnica) {
-        this.mapaNamirnica = mapaNamirnica;
+
+    public void setListaNamirnica(List<Namirnica> listaNamirnica) {
+        this.listaNamirnica = listaNamirnica;
+    }
+
+    public List<Integer> getListaKolicina() {
+        return listaKolicina;
+    }
+
+    public void setListaKolicina(List<Integer> listaKolicina) {
+        this.listaKolicina = listaKolicina;
     }
 
     @Override
     public String toString() {
-        return "Recept [recept_id=" + recept_id + ", naziv=" + naziv + ", mapaNamirnica=" + mapaNamirnica + "]";
+        return "Recept{" +
+                "recept_id=" + recept_id +
+                ", naziv='" + naziv + '\'' +
+                ", vremePripreme=" + vremePripreme +
+                ", vremeKuvanja=" + vremeKuvanja +
+                ", listaNamirnica=" + listaNamirnica +
+                ", listaKolicina=" + listaKolicina +
+                '}';
     }
-
-
-
 }

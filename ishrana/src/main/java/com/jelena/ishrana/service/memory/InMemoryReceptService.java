@@ -46,19 +46,37 @@ public class InMemoryReceptService implements ReceptService {
         r1.setNaziv("mus od kupina");
         r1.setVremeKuvanja(30);
         r1.setVremePripreme(5);
-        Map<Namirnica, Integer> map1 = new HashMap<>();
+        List<Namirnica> listaNamirnica = new ArrayList<>();
+        listaNamirnica.add(n1);
+        listaNamirnica.add(n2);
+        List<Integer> listaKolicina = new ArrayList<>();
+        listaKolicina.add(500);
+        listaKolicina.add(300);
+     /*   Map<Namirnica, Integer> map1 = new HashMap<>();
         map1.put(n1, 500);
         map1.put(n2, 300);
-        r1.setMapaNamirnica(map1);
-        r1.setRecept_id(sequence.getAndIncrement());  //r1, id =3
+        r1.setMapaNamirnica(map1);*/
+        r1.setListaKolicina(listaKolicina);
+        r1.setListaNamirnica(listaNamirnica);
+        r1.setRecept_id(sequence.getAndIncrement());
         map.put(r1.getRecept_id(), r1);
 
-/*        Recept r2 = new Recept();
-        r2.setNaziv("kolač od šljiva");
-        r2.setVremeKuvanja(45);
-        r2.setVremePripreme(30);
+
+        Recept r2 = new Recept();
+        r2.setNaziv("mus od kupina drugi");
+        r2.setVremeKuvanja(20);
+        r2.setVremePripreme(10);
+        List<Namirnica> listaNamirnica2 = new ArrayList<>();
+        listaNamirnica2.add(n1);
+        listaNamirnica2.add(n2);
+        List<Integer> listaKolicina2 = new ArrayList<>();
+        listaKolicina2.add(550);
+        listaKolicina2.add(350);
+
+        r2.setListaKolicina(listaKolicina2);
+        r2.setListaNamirnica(listaNamirnica2);
         r2.setRecept_id(sequence.getAndIncrement());
-        map.put(r2.getRecept_id(), r2);*/
+        map.put(r2.getRecept_id(), r2);
 
     }
 

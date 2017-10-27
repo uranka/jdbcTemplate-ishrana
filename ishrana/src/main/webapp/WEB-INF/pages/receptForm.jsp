@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -28,7 +29,34 @@
             <td><form:label path="vremeKuvanja">Vreme kuvanja (min):</form:label></td>
             <td><form:input type="number" path="vremeKuvanja" min="0.0"/></td>
         </tr>
+        <tr>
+            <td>NAMIRNICA</td>
+            <td>KOLIČINA (g)</td>
+        </tr>
 
+        <c:if test="${fn:length(recept.listaNamirnica) gt 0}">
+        <c:forEach begin="0" end="${fn:length(recept.listaNamirnica)-1}" varStatus="status">
+        <tr>
+            <%-- binding svega sto treba da se ocuva o namirnici --%>
+            <form:hidden path="listaNamirnica[${status.index}].namirnica_id" />
+            <form:hidden path="listaNamirnica[${status.index}].naziv" />
+            <form:hidden path="listaNamirnica[${status.index}].kcal" />
+            <form:hidden path="listaNamirnica[${status.index}].p" />
+            <form:hidden path="listaNamirnica[${status.index}].m" />
+            <form:hidden path="listaNamirnica[${status.index}].uh" />
+            <form:hidden path="listaNamirnica[${status.index}].kategorija" />
+
+            <td><form:label path="listaNamirnica[${status.index}].naziv"> ${recept.listaNamirnica[status.index].naziv} --  ${status.index}--   </form:label></td>
+            <td><form:input type="number" path="listaKolicina[${status.index}]" min="0.0" value="${recept.listaKolicina[status.index]}"/></td>
+            <td>obriši</td>
+        </tr>
+        </c:forEach>
+        </c:if>
+
+        <tr>
+            <td colspan="2"></td>
+            <td>dodaj</td>
+        </tr>
 
         <tr>
             <td>

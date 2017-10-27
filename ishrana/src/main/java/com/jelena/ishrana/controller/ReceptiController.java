@@ -1,6 +1,8 @@
 package com.jelena.ishrana.controller;
 
+import com.jelena.ishrana.model.Namirnica;
 import com.jelena.ishrana.model.Recept;
+import com.jelena.ishrana.service.memory.NamirnicaService;
 import com.jelena.ishrana.service.memory.ReceptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.util.List;
 
 
@@ -21,6 +24,8 @@ public class ReceptiController {
     @Autowired
     private ReceptService receptService;
 
+    @Autowired
+    private NamirnicaService namirnicaService;
 
     @RequestMapping("/all")
     public String vratiRecepte(Model model) {
@@ -54,7 +59,7 @@ public class ReceptiController {
     public String dodajNoviRecept(Model model) {
         System.out.println("inside dodajNoviRecept method");
         Recept recept = new Recept();
-        recept.setRecept_id(0);
+        recept.setRecept_id(0L);
         System.out.println(recept);
         model.addAttribute("recept", recept);
         return "receptForm";
