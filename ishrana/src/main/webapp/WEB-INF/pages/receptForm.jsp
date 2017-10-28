@@ -48,7 +48,12 @@
 
             <td><form:label path="listaNamirnica[${status.index}].naziv"> ${recept.listaNamirnica[status.index].naziv} --  ${status.index}--   </form:label></td>
             <td><form:input type="number" path="listaKolicina[${status.index}]" min="0.0" value="${recept.listaKolicina[status.index]}"/></td>
-            <td>obriši</td>
+            <td>
+                <button type="submit" name="removeNamirnica"
+                        value="${recept.listaNamirnica[status.index].namirnica_id}">obriši</button>
+            </td>
+                    <%-- buttoni su post, a linkovi su get --%>
+
         </tr>
         </c:forEach>
         </c:if>

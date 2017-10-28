@@ -7,10 +7,7 @@ import com.jelena.ishrana.service.memory.ReceptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -80,5 +77,16 @@ public class ReceptiController {
         model.addAttribute("recept", recept);
         return "recept";
     }
+
+    // parameter removeNamirnica must be present in post request
+    @RequestMapping(params="removeNamirnica", method = RequestMethod.POST)
+    public String removeNamirnica(Recept recept,
+                                  @RequestParam(value = "removeNamirnica") Long namirnica_id, Model model) {
+        System.out.println("inside removeNamirnica method, namirnica_id: " + namirnica_id);
+        receptService.removeNamirnica(recept, namirnica_id);
+        model.addAttribute("recept", recept);
+        return "receptForm";
+    }
+
 
 }

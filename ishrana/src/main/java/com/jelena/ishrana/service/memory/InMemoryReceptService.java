@@ -2,7 +2,7 @@ package com.jelena.ishrana.service.memory;
 
 import com.jelena.ishrana.model.Namirnica;
 import com.jelena.ishrana.model.Recept;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -14,8 +14,6 @@ public class InMemoryReceptService implements ReceptService {
     private Map<Long, Recept> map = new HashMap<>();
     private final AtomicLong sequence = new AtomicLong(1);
 
-//    @Autowired
-//    NamirnicaService namirnicaService;
 
     public InMemoryReceptService() {
 
@@ -52,10 +50,6 @@ public class InMemoryReceptService implements ReceptService {
         List<Integer> listaKolicina = new ArrayList<>();
         listaKolicina.add(500);
         listaKolicina.add(300);
-     /*   Map<Namirnica, Integer> map1 = new HashMap<>();
-        map1.put(n1, 500);
-        map1.put(n2, 300);
-        r1.setMapaNamirnica(map1);*/
         r1.setListaKolicina(listaKolicina);
         r1.setListaNamirnica(listaNamirnica);
         r1.setRecept_id(sequence.getAndIncrement());
@@ -108,4 +102,22 @@ public class InMemoryReceptService implements ReceptService {
         }
 
     }
+
+    @Override
+    public void removeNamirnica(Recept recept, Long namirnica_id) throws IllegalArgumentException{
+        if (namirnica_id == null || namirnica_id < 0) {
+            throw new IllegalArgumentException("non existing namirnica_id: " + namirnica_id);
+        }
+
+        List<Namirnica> listaNamirnica = recept.getListaNamirnica();
+        for(int i = 0; i < listaNamirnica.size(); i++) {
+            if (listaNamirnica.get(i).getNamirnica_id().equals(namirnica_id)) {
+                recept.getListaNamirnica().remove(i);
+                recept.getListaKolicina().remove(i);
+                break;
+            }
+        }
+    }
+
+
 }

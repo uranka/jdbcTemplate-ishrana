@@ -9,4 +9,5 @@ public interface ReceptService {
     Recept findOne(Long id);
     Recept save(Recept recept);
     void remove(Long id) throws IllegalArgumentException;
+    void removeNamirnica(Recept recept, Long namirnica_id) throws IllegalArgumentException;
 }
