@@ -38,7 +38,7 @@
         <c:forEach begin="0" end="${fn:length(recept.listaNamirnica)-1}" varStatus="status">
         <tr>
             <%-- binding svega sto treba da se ocuva o namirnici --%>
-            <form:hidden path="listaNamirnica[${status.index}].namirnica_id" />
+
             <form:hidden path="listaNamirnica[${status.index}].naziv" />
             <form:hidden path="listaNamirnica[${status.index}].kcal" />
             <form:hidden path="listaNamirnica[${status.index}].p" />
@@ -46,13 +46,42 @@
             <form:hidden path="listaNamirnica[${status.index}].uh" />
             <form:hidden path="listaNamirnica[${status.index}].kategorija" />
 
-            <td><form:label path="listaNamirnica[${status.index}].naziv"> ${recept.listaNamirnica[status.index].naziv} --  ${status.index}--   </form:label></td>
-            <td><form:input type="number" path="listaKolicina[${status.index}]" min="0.0" value="${recept.listaKolicina[status.index]}"/></td>
-            <td>
-                <button type="submit" name="removeNamirnica"
-                        value="${recept.listaNamirnica[status.index].namirnica_id}">obriši</button>
-            </td>
-                    <%-- buttoni su post, a linkovi su get --%>
+
+            <c:choose>
+                <c:when test="${not empty namirniceSelect}">
+                    <c:choose>
+                    <c:when test="${status.last}">
+                        <td><form:select path="listaNamirnica[${status.index}].namirnica_id">
+                                <form:option value="0" label="--- Select ---"/>
+                                <form:options items="${namirniceSelect}" itemLabel="naziv" itemValue="namirnica_id" />
+                            </form:select>
+
+                        </td>
+
+                    </c:when>
+                    <c:otherwise>
+                        <td><form:label path="listaNamirnica[${status.index}].naziv"> ${recept.listaNamirnica[status.index].naziv} --  ${status.index}--   </form:label></td>
+                        <form:hidden path="listaNamirnica[${status.index}].namirnica_id" />
+
+                    </c:otherwise>
+                    </c:choose>
+                </c:when>
+                <c:otherwise>
+                    <td><form:label path="listaNamirnica[${status.index}].naziv"> ${recept.listaNamirnica[status.index].naziv} --  ${status.index}--   </form:label></td>
+                    <form:hidden path="listaNamirnica[${status.index}].namirnica_id" />
+
+                </c:otherwise>
+            </c:choose>
+
+
+                <td><form:input type="number" path="listaKolicina[${status.index}]" min="0.0" value="${recept.listaKolicina[status.index]}"/></td>
+
+                <td>
+                    <button type="submit" name="removeNamirnica"
+                            value="${recept.listaNamirnica[status.index].namirnica_id}">obriši</button>
+                </td>
+
+                        <%-- buttoni su post, a linkovi su get --%>
 
         </tr>
         </c:forEach>
@@ -60,7 +89,12 @@
 
         <tr>
             <td colspan="2"></td>
-            <td>dodaj</td>
+
+            <td>
+                <button type="submit" name="addNamirnica">dodaj</button>
+            </td>
+
+
         </tr>
 
         <tr>

@@ -3,6 +3,7 @@ package com.jelena.ishrana.service.memory;
 import com.jelena.ishrana.model.Namirnica;
 import com.jelena.ishrana.model.Recept;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -13,6 +14,11 @@ public class InMemoryReceptService implements ReceptService {
 
     private Map<Long, Recept> map = new HashMap<>();
     private final AtomicLong sequence = new AtomicLong(1);
+
+
+    @Autowired
+    private NamirnicaService namirnicaService;
+
 
 
     public InMemoryReceptService() {
@@ -35,10 +41,6 @@ public class InMemoryReceptService implements ReceptService {
         n2.setUh(5.0);
         n2.setNamirnica_id(sequence.getAndIncrement());  //n2, id =2
 
-// trebalo bi namirnice da uzmem iz InMemoryNamirnicaService, ali kako
-// sa InMemoryNamirnicaService findAll() metodom
-// znaci sa Autowire ubaci ovde NamirnicaService namirnicaService
-        //List<Namirnica> lst = namirnicaService.findAll();
 
         Recept r1 = new Recept();
         r1.setNaziv("mus od kupina");
@@ -105,18 +107,43 @@ public class InMemoryReceptService implements ReceptService {
 
     @Override
     public void removeNamirnica(Recept recept, Long namirnica_id) throws IllegalArgumentException{
-        if (namirnica_id == null || namirnica_id < 0) {
+        if (namirnica_id == null || namirnica_id <= 0) {
             throw new IllegalArgumentException("non existing namirnica_id: " + namirnica_id);
         }
 
         List<Namirnica> listaNamirnica = recept.getListaNamirnica();
+
+        System.out.println(listaNamirnica);
         for(int i = 0; i < listaNamirnica.size(); i++) {
-            if (listaNamirnica.get(i).getNamirnica_id().equals(namirnica_id)) {
+            if (listaNamirnica.get(i).getNamirnica_id().equals(namirnica_id) ) {
+                //System.out.println("- - - - - - - - - - ");
                 recept.getListaNamirnica().remove(i);
                 recept.getListaKolicina().remove(i);
                 break;
             }
         }
+    }
+
+
+    // dodaje u recept prvu namirnicu koja jos nije bila u receptu (u kolicini 0)
+    // parametar: namirnica  koja se dodaje
+    // a kontroler da utvrdi koja je to namirnica koja treba da se doda (prva sa liste onih koje nema u receptu)
+    @Override
+    public void addNamirnica(Recept recept, Namirnica namirnica) {
+        if (recept.getListaNamirnica() != null) { // mozda treba ono sa isempty ili je stvarno nema??
+            recept.getListaNamirnica().add(namirnica);
+            recept.getListaKolicina().add(0);
+        }
+        else {
+            System.out.println("metoda addNamirnica : LISTA NAMIRNICA JE NULL"); // TEST
+            List<Namirnica> namirnicaList = new ArrayList<>();
+            namirnicaList.add(namirnica);
+            List<Integer> kolicinaList = new ArrayList<>();
+            kolicinaList.add(0);
+            recept.setListaNamirnica(namirnicaList);
+            recept.setListaKolicina(kolicinaList);
+        }
+        //System.out.println("addNamirnica klase InMemoryReceptService " + recept);
     }
 
 
