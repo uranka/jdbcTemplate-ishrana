@@ -61,5 +61,18 @@ public class Namirnica {
                 + m + ", uh=" + uh + ", kategorija=" + kategorija + "]";
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        Namirnica namirnica = (Namirnica) o;
+
+        return namirnica_id != null ? namirnica_id.equals(namirnica.namirnica_id) : namirnica.namirnica_id == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return namirnica_id != null ? namirnica_id.hashCode() : 0;
+    }
 }

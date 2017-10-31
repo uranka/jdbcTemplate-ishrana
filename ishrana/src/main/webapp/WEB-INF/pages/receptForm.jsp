@@ -35,67 +35,38 @@
         </tr>
 
         <c:if test="${fn:length(recept.listaNamirnica) gt 0}">
-        <c:forEach begin="0" end="${fn:length(recept.listaNamirnica)-1}" varStatus="status">
-        <tr>
-            <%-- binding svega sto treba da se ocuva o namirnici --%>
+            <c:forEach begin="0" end="${fn:length(recept.listaNamirnica)-1}" varStatus="status">
+                <form:hidden path="listaNamirnica[${status.index}].naziv" />
+                <form:hidden path="listaNamirnica[${status.index}].kcal" />
+                <form:hidden path="listaNamirnica[${status.index}].p" />
+                <form:hidden path="listaNamirnica[${status.index}].m" />
+                <form:hidden path="listaNamirnica[${status.index}].uh" />
+                <form:hidden path="listaNamirnica[${status.index}].kategorija" />
+                <form:hidden path="listaNamirnica[${status.index}].namirnica_id" />
 
-            <form:hidden path="listaNamirnica[${status.index}].naziv" />
-            <form:hidden path="listaNamirnica[${status.index}].kcal" />
-            <form:hidden path="listaNamirnica[${status.index}].p" />
-            <form:hidden path="listaNamirnica[${status.index}].m" />
-            <form:hidden path="listaNamirnica[${status.index}].uh" />
-            <form:hidden path="listaNamirnica[${status.index}].kategorija" />
-
-
-            <c:choose>
-                <c:when test="${not empty namirniceSelect}">
-                    <c:choose>
-                    <c:when test="${status.last}">
-                        <td><form:select path="listaNamirnica[${status.index}].namirnica_id">
-                                <form:option value="0" label="--- Select ---"/>
-                                <form:options items="${namirniceSelect}" itemLabel="naziv" itemValue="namirnica_id" />
-                            </form:select>
-
-                        </td>
-
-                    </c:when>
-                    <c:otherwise>
-                        <td><form:label path="listaNamirnica[${status.index}].naziv"> ${recept.listaNamirnica[status.index].naziv} --  ${status.index}--   </form:label></td>
-                        <form:hidden path="listaNamirnica[${status.index}].namirnica_id" />
-
-                    </c:otherwise>
-                    </c:choose>
-                </c:when>
-                <c:otherwise>
+                <tr>
                     <td><form:label path="listaNamirnica[${status.index}].naziv"> ${recept.listaNamirnica[status.index].naziv} --  ${status.index}--   </form:label></td>
-                    <form:hidden path="listaNamirnica[${status.index}].namirnica_id" />
-
-                </c:otherwise>
-            </c:choose>
-
-
-                <td><form:input type="number" path="listaKolicina[${status.index}]" min="0.0" value="${recept.listaKolicina[status.index]}"/></td>
-
-                <td>
-                    <button type="submit" name="removeNamirnica"
-                            value="${recept.listaNamirnica[status.index].namirnica_id}">obriši</button>
-                </td>
-
-                        <%-- buttoni su post, a linkovi su get --%>
-
-        </tr>
-        </c:forEach>
+                    <td><form:input type="number" path="listaKolicina[${status.index}]" min="0.0" value="${recept.listaKolicina[status.index]}"/></td>
+                    <td>
+                        <button type="submit" name="removeNamirnica"
+                                value="${recept.listaNamirnica[status.index].namirnica_id}">obriši</button>
+                    </td>
+                </tr>
+            </c:forEach>
         </c:if>
 
         <tr>
-            <td colspan="2"></td>
-
+            <td><form:select path="" name="nid">
+                <option value="0">--- Select ---</option>
+                <form:options items="${namirniceSelect}" itemLabel="naziv" itemValue="namirnica_id" />
+                </form:select>
+            </td>
+            <td><input type="number" name = "kolicina"  min="0.0" /></td>
             <td>
                 <button type="submit" name="addNamirnica">dodaj</button>
             </td>
-
-
         </tr>
+
 
         <tr>
             <td>
@@ -106,6 +77,7 @@
             </td>
         </tr>
     </table>
+
 </form:form>
 
 </body>

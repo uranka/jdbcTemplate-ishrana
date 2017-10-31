@@ -107,6 +107,7 @@ public class InMemoryReceptService implements ReceptService {
 
     @Override
     public void removeNamirnica(Recept recept, Long namirnica_id) throws IllegalArgumentException{
+        System.out.println("- - - - - inside removeNamirnica- - - - - ");
         if (namirnica_id == null || namirnica_id <= 0) {
             throw new IllegalArgumentException("non existing namirnica_id: " + namirnica_id);
         }
@@ -116,7 +117,6 @@ public class InMemoryReceptService implements ReceptService {
         System.out.println(listaNamirnica);
         for(int i = 0; i < listaNamirnica.size(); i++) {
             if (listaNamirnica.get(i).getNamirnica_id().equals(namirnica_id) ) {
-                //System.out.println("- - - - - - - - - - ");
                 recept.getListaNamirnica().remove(i);
                 recept.getListaKolicina().remove(i);
                 break;
@@ -125,25 +125,23 @@ public class InMemoryReceptService implements ReceptService {
     }
 
 
-    // dodaje u recept prvu namirnicu koja jos nije bila u receptu (u kolicini 0)
-    // parametar: namirnica  koja se dodaje
-    // a kontroler da utvrdi koja je to namirnica koja treba da se doda (prva sa liste onih koje nema u receptu)
+    // dodaje u recept namirnicu zadatog namirnica_id i zadate kolicine
     @Override
-    public void addNamirnica(Recept recept, Namirnica namirnica) {
-        if (recept.getListaNamirnica() != null) { // mozda treba ono sa isempty ili je stvarno nema??
-            recept.getListaNamirnica().add(namirnica);
-            recept.getListaKolicina().add(0);
+    public void addNamirnica(Recept recept, Long namirnica_id, Integer kolicina) {
+        System.out.println("++++++++ inside addNamirnica+++++++ ");
+        if (recept.getListaNamirnica() != null) {
+            recept.getListaNamirnica().add(namirnicaService.findOne(namirnica_id));
+            recept.getListaKolicina().add(kolicina);
         }
         else {
             System.out.println("metoda addNamirnica : LISTA NAMIRNICA JE NULL"); // TEST
             List<Namirnica> namirnicaList = new ArrayList<>();
-            namirnicaList.add(namirnica);
+            namirnicaList.add(namirnicaService.findOne(namirnica_id));
             List<Integer> kolicinaList = new ArrayList<>();
-            kolicinaList.add(0);
+            kolicinaList.add(kolicina);
             recept.setListaNamirnica(namirnicaList);
             recept.setListaKolicina(kolicinaList);
         }
-        //System.out.println("addNamirnica klase InMemoryReceptService " + recept);
     }
 
 

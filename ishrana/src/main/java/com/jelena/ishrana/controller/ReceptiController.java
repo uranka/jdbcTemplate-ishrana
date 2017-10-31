@@ -38,7 +38,14 @@ public class ReceptiController {
     @RequestMapping("/edit/{recept_id}")
     public String editujRecept(Model model, @PathVariable("recept_id") Long recept_id) {
         System.out.println("inside editujRecept method, recept_id: " + recept_id);
+
         Recept recept = receptService.findOne(recept_id);
+        System.out.println("iz edita " + recept);
+
+        List<Namirnica> namirniceSelect = findNotInRecept(recept);
+        model.addAttribute("namirniceSelect", namirniceSelect);
+        System.out.println("namirniceSelect" + namirniceSelect);
+
         model.addAttribute("recept", recept);
         return "receptForm";
     }
@@ -63,6 +70,20 @@ public class ReceptiController {
         System.out.println("inside dodajNoviRecept method");
         Recept recept = new Recept();
         recept.setRecept_id(0L);
+
+
+        List<Namirnica> namirniceSelect = namirnicaService.findAll(); // nov je recept pa sve namirnice nudim za izbor
+        model.addAttribute("namirniceSelect", namirniceSelect);
+        System.out.println("namirniceSelect" + namirniceSelect);
+
+        //listaNamirnica unutar recepta je null, pa da ne bi bila null nego da bude empty
+        recept.setListaNamirnica(new ArrayList<Namirnica>());
+        // isto za  kolicine
+        List<Integer> listaKolicina = new ArrayList<Integer>();
+        //listaKolicina.add(0);
+        recept.setListaKolicina(listaKolicina);
+
+
         System.out.println(recept);
         model.addAttribute("recept", recept);
         return "receptForm";
@@ -97,28 +118,33 @@ public class ReceptiController {
 
         System.out.println("namirnica_id u removeNamirnica : " + namirnica_id);
 
+        List<Namirnica> namirniceSelect = findNotInRecept(recept);
+        model.addAttribute("namirniceSelect", namirniceSelect);
+
         model.addAttribute("recept", recept);
         return "receptForm";
     }
 
-
-    @RequestMapping(params="addNamirnica", method = RequestMethod.POST)
-    public String addNamirnica(Recept recept, Model model){
-        System.out.println("inside addNamirnica method");
+// da bi ovo radilo ne sme da se klikne samo na dodaj da nije odabrana namirnica, a kolicina moze i da nije popunjena
+    //  RESI TO!!!!!!!!!!!!!
+    @RequestMapping(params = { "addNamirnica" },  method = RequestMethod.POST)
+    public String addNamirnica(Recept recept,
+                               @RequestParam(value = "nid") Long namirnica_id,
+                               @RequestParam(value = "kolicina") Integer kolicina, Model model){
+        System.out.println("inside addNamirnica method klase ReceptiController, namirnica_id: " + namirnica_id + " kolicina: " + kolicina);
+        System.out.println(recept);
 
         rekonstruisiListuNamirnicaNaOsnovuIdova(recept);
 
-        List<Namirnica> namirniceSelect;
-        // ako je lista prazna nece se stvoriti namirniceSelect
-        if (!findNotInRecept(recept).isEmpty()) {
-            System.out.println(findNotInRecept(recept) );
-            namirniceSelect = findNotInRecept(recept);
-            model.addAttribute("namirniceSelect", namirniceSelect);
-            System.out.println("namirniceSelect" + namirniceSelect);
-            receptService.addNamirnica(recept, namirniceSelect.get(0)); // prva iz liste namirnica koje nudimo za odabir
-        }
-// prazna lista-- nema elemenata, nije isto sto i lista je null!!
-// ako je bio negde new ArrayList onda imamo praznu listu, ako nije onda je lista null
+        receptService.addNamirnica(recept, namirnica_id, kolicina);
+
+
+       List<Namirnica> namirniceSelect = findNotInRecept(recept);//ovde neki null pointer exception
+       // List<Namirnica> namirniceSelect = namirnicaService.findAll();
+
+                model.addAttribute("namirniceSelect", namirniceSelect);
+        System.out.println("namirniceSelect" + namirniceSelect);
+
         model.addAttribute("recept", recept);
         return "receptForm";
     }
@@ -140,9 +166,11 @@ public class ReceptiController {
     }
 
     // vraca listu namirnica koje nisu u receptu
+    // ako takvih nema vraca praznu listu--proveri ovo
+    // bitno zbog toga sto brisanje namirnice radi prema id, ne mogu da dozvolim da imam u listi namirnica vise sa istim id-om
     private List<Namirnica> findNotInRecept(Recept recept) {
         List<Namirnica> namirniceAll = namirnicaService.findAll();
-        //List<Namirnica> namirniceRecept = recept.getListaNamirnica();
+
         List<Namirnica> namirniceNotInRecept = new ArrayList<>();
 
         for (Namirnica nAll : namirniceAll) {
@@ -158,7 +186,9 @@ public class ReceptiController {
     private boolean inRecept(Recept recept, Namirnica namirnica) {
         boolean inRecept = false;
         List<Namirnica> namirniceRecept = recept.getListaNamirnica();
-        if (namirniceRecept != null) {
+
+        //if (namirniceRecept != null) {
+        if (! namirniceRecept.isEmpty()) {
             for (Namirnica nRecept : namirniceRecept) {
                 if (nRecept.equals(namirnica)) {
                     inRecept = true;
@@ -166,6 +196,7 @@ public class ReceptiController {
                 }
             }
         }
+        System.out.println("inRecept " + inRecept);
         return inRecept;
     }
 

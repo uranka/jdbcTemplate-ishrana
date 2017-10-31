@@ -11,5 +11,6 @@ public interface ReceptService {
     Recept save(Recept recept);
     void remove(Long id) throws IllegalArgumentException;
     void removeNamirnica(Recept recept, Long namirnica_id) throws IllegalArgumentException;
-    void addNamirnica(Recept recept, Namirnica namirnica);
+    //void addNamirnica(Recept recept, Namirnica namirnica);
+    void addNamirnica(Recept recept, Long namirnica_id, Integer kolicina);
 }
