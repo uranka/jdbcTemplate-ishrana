@@ -55,9 +55,11 @@
             </c:forEach>
         </c:if>
 
+
+        <c:if test="${not empty namirniceSelect}">
         <tr>
             <td><form:select path="" name="nid">
-                <option value="0">--- Select ---</option>
+                <%-- <option value="0">--- Select ---</option> --%>
                 <form:options items="${namirniceSelect}" itemLabel="naziv" itemValue="namirnica_id" />
                 </form:select>
             </td>
@@ -66,7 +68,7 @@
                 <button type="submit" name="addNamirnica">dodaj</button>
             </td>
         </tr>
-
+        </c:if>
 
         <tr>
             <td>

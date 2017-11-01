@@ -186,13 +186,15 @@ public class ReceptiController {
     private boolean inRecept(Recept recept, Namirnica namirnica) {
         boolean inRecept = false;
         List<Namirnica> namirniceRecept = recept.getListaNamirnica();
+        if (namirniceRecept == null) System.out.println("trtrtmrttraatrtert null");
 
-        //if (namirniceRecept != null) {
-        if (! namirniceRecept.isEmpty()) {
-            for (Namirnica nRecept : namirniceRecept) {
-                if (nRecept.equals(namirnica)) {
-                    inRecept = true;
-                    break;
+        if (namirniceRecept != null) {
+            if (!namirniceRecept.isEmpty()) {
+                for (Namirnica nRecept : namirniceRecept) {
+                    if (nRecept.equals(namirnica)) {
+                        inRecept = true;
+                        break;
+                    }
                 }
             }
         }
