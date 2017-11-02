@@ -88,7 +88,7 @@ public class InMemoryReceptService implements ReceptService {
 
     @Override
     public Recept save(Recept recept) {
-        if (recept.getRecept_id() == 0) {
+        if (recept.getRecept_id() == null) {
             recept.setRecept_id(sequence.getAndIncrement());
             System.out.println("**************");
         }

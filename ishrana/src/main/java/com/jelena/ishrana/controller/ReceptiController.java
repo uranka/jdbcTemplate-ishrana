@@ -54,23 +54,6 @@ public class ReceptiController {
         return "receptForm";
     }
 
-/*
-    @RequestMapping(method = RequestMethod.POST)
-    public String post(@ModelAttribute("recept") Recept recept, HttpServletRequest request) {
-        System.out.println("inside post method");
-
-        //rekonstruisiListuNamirnicaNaOsnovuIdova(recept);
-
-        System.out.println(recept);
-
-        // ako je pritisnut button sa imenom save_button onda snimi inace ne
-        if (request.getParameter("save_button") != null) {
-            receptService.save(recept);
-        }
-        return "redirect:recepti/all";
-    }
-*/
-
     @RequestMapping(params="save_button", method = RequestMethod.POST)
     public String save(Recept recept) {
         LOG.info("saving recept");
@@ -89,7 +72,7 @@ public class ReceptiController {
     public String dodajNoviRecept(Model model) {
         LOG.info("start of adding new recept");
         Recept recept = new Recept();
-        recept.setRecept_id(0L);
+        //recept.setRecept_id(0L);
 
         List<Namirnica> namirniceSelect = namirnicaService.findAll(); // nov je recept pa sve namirnice nudim za izbor
         model.addAttribute("namirniceSelect", namirniceSelect);
