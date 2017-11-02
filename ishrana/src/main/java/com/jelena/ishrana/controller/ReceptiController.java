@@ -14,11 +14,14 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 @Controller
 @RequestMapping("/recepti")
 public class ReceptiController {
+    private static final Logger LOG = LoggerFactory.getLogger(ReceptiController.class);
 
     @Autowired
     private ReceptService receptService;
@@ -29,6 +32,7 @@ public class ReceptiController {
     @RequestMapping("/all")
     public String vratiRecepte(Model model) {
         System.out.println("inside vratiRecepte method");
+        LOG.info("inside vratiRecepte method");
         List<Recept> lst = receptService.findAll();
         model.addAttribute("recepti", lst);
         return "recepti";
@@ -125,8 +129,7 @@ public class ReceptiController {
         return "receptForm";
     }
 
-// da bi ovo radilo ne sme da se klikne samo na dodaj da nije odabrana namirnica, a kolicina moze i da nije popunjena
-    //  RESI TO!!!!!!!!!!!!!
+
     @RequestMapping(params = { "addNamirnica" },  method = RequestMethod.POST)
     public String addNamirnica(Recept recept,
                                @RequestParam(value = "nid") Long namirnica_id,
@@ -139,10 +142,10 @@ public class ReceptiController {
         receptService.addNamirnica(recept, namirnica_id, kolicina);
 
 
-       List<Namirnica> namirniceSelect = findNotInRecept(recept);//ovde neki null pointer exception
-       // List<Namirnica> namirniceSelect = namirnicaService.findAll();
+       List<Namirnica> namirniceSelect = findNotInRecept(recept);
 
-                model.addAttribute("namirniceSelect", namirniceSelect);
+
+        model.addAttribute("namirniceSelect", namirniceSelect);
         System.out.println("namirniceSelect" + namirniceSelect);
 
         model.addAttribute("recept", recept);
@@ -162,6 +165,7 @@ public class ReceptiController {
         }
         else{// ovaj else brise on je samo kontrola sta se desava
             System.out.println("LISTA JE NULL"); // KADA NEMAM U LISTI NAMIRNICU list je null, a tada ne mozes proveravati nista metodom isEmpty jer liste i nemas
+            LOG.warn("lista namirnica iz recepta je null");
         }
     }
 
@@ -186,7 +190,9 @@ public class ReceptiController {
     private boolean inRecept(Recept recept, Namirnica namirnica) {
         boolean inRecept = false;
         List<Namirnica> namirniceRecept = recept.getListaNamirnica();
-        if (namirniceRecept == null) System.out.println("trtrtmrttraatrtert null");
+        if (namirniceRecept == null) {
+            LOG.info("lista namirniceRecept je null");
+        }
 
         if (namirniceRecept != null) {
             if (!namirniceRecept.isEmpty()) {
