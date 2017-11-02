@@ -72,10 +72,10 @@
 
         <tr>
             <td>
-                <input type="submit" name="save_button" value="Snimi" />
+                <button type="submit" name="save_button">Snimi</button>
             </td>
             <td>
-                <input type="submit" name="cancel_button" value="Odustani" />
+                <button type="submit" name="cancel_button">Odustani</button>
             </td>
         </tr>
     </table>
