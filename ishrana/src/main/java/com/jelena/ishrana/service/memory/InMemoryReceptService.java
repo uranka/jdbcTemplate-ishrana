@@ -5,6 +5,7 @@ import com.jelena.ishrana.model.Recept;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
@@ -16,8 +17,8 @@ public class InMemoryReceptService implements ReceptService {
     private final AtomicLong sequence = new AtomicLong(1);
 
 
-    @Autowired
-    private NamirnicaService namirnicaService;
+    //@Autowired
+    //private NamirnicaService namirnicaService;
 
 
 
@@ -73,6 +74,8 @@ public class InMemoryReceptService implements ReceptService {
         r2.setListaNamirnica(listaNamirnica2);
         r2.setRecept_id(sequence.getAndIncrement());
         map.put(r2.getRecept_id(), r2);
+        //System.out.println("namService je " + namirnicaService);// ovo je null kada se izvrsava konstruktor, izgleda se stvara taj bin kada zatreba
+        // a to je u addNamirnica
 
     }
 
@@ -124,24 +127,14 @@ public class InMemoryReceptService implements ReceptService {
         }
     }
 
-
-    // dodaje u recept namirnicu zadatog namirnica_id i zadate kolicine
+    // dodaje u recept namirnicu zadate kolicine
     @Override
-    public void addNamirnica(Recept recept, Long namirnica_id, Integer kolicina) {
+    public void addNamirnica(Recept recept, Namirnica namirnica, Integer kolicina) {
+
         System.out.println("++++++++ inside addNamirnica+++++++ ");
-        if (recept.getListaNamirnica() != null) {
-            recept.getListaNamirnica().add(namirnicaService.findOne(namirnica_id));
-            recept.getListaKolicina().add(kolicina);
-        }
-        else {
-            System.out.println("metoda addNamirnica : LISTA NAMIRNICA JE NULL"); // TEST
-            List<Namirnica> namirnicaList = new ArrayList<>();
-            namirnicaList.add(namirnicaService.findOne(namirnica_id));
-            List<Integer> kolicinaList = new ArrayList<>();
-            kolicinaList.add(kolicina);
-            recept.setListaNamirnica(namirnicaList);
-            recept.setListaKolicina(kolicinaList);
-        }
+        recept.getListaNamirnica().add(namirnica);
+        recept.getListaKolicina().add(kolicina);
+
     }
 
 

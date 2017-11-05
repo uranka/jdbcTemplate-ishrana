@@ -1,5 +1,6 @@
 package com.jelena.ishrana.service.memory;
 
+import com.jelena.ishrana.model.Namirnica;
 import com.jelena.ishrana.model.Recept;
 import org.junit.Assert;
 import org.junit.Before;
@@ -11,7 +12,6 @@ import java.util.List;
 public class InMemoryReceptServiceTest {
 
     private ReceptService receptService;
-
 
     @Before
     public void setUp() {
@@ -26,8 +26,10 @@ public class InMemoryReceptServiceTest {
         recept2.setRecept_id(20L);
         recept2.setNaziv("mus od kupina treci");
 
+
         receptService.save(recept1);
         receptService.save(recept2);
+
     }
 
     @Test
@@ -41,10 +43,7 @@ public class InMemoryReceptServiceTest {
     public void testFindAll() {
         List<Recept> recepti = receptService.findAll();
         // posto su recepti u mapi ne garantuje se redosled
-        System.out.println(recepti.get(0));
-        System.out.println(recepti.get(1));
-        System.out.println(recepti.get(2));
-        System.out.println(recepti.get(3));
+
 
         Assert.assertEquals(4, recepti.size()); // 2 iz konstruktora, dva iz setup-a
         // onda mi ni ne treba setup?
@@ -112,6 +111,35 @@ public class InMemoryReceptServiceTest {
         Assert.assertNull(receptService.findOne(30L));
         // probaj da ga uklonis
         receptService.remove(30L);
+    }
+
+
+    @Test
+    public void testAddNamirnica() {
+        Recept r = receptService.findOne(10L); // ovo je prazan recept bez namirnice
+        System.out.println(r);
+
+        Assert.assertNotNull(r.getListaNamirnica());
+        Assert.assertTrue(r.getListaNamirnica().size() == 0);
+
+        // dodajem namirnicu i proveravam da li je velicina liste 1
+        // i da li ima nesto na prvom mestu u listi
+
+        Namirnica n1 = new Namirnica();
+        n1.setNamirnica_id(1000L);
+        n1.setNaziv("kisela jabuka");
+        n1.setP(0);
+        n1.setM(0);
+        n1.setUh(12);
+        n1.setKcal(40);
+        n1.setKategorija("voće");
+        System.out.println(n1);
+
+        receptService.addNamirnica(r, n1, 100);
+
+        Assert.assertNotNull(r.getListaNamirnica());
+        Assert.assertTrue(r.getListaNamirnica().size() == 1);
+        Assert.assertNotNull(r.getListaNamirnica().get(0));
     }
 
 }

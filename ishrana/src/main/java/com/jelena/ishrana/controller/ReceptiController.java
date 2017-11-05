@@ -78,13 +78,7 @@ public class ReceptiController {
         model.addAttribute("namirniceSelect", namirniceSelect);
         System.out.println("namirniceSelect" + namirniceSelect);
 
-/*
-        //listaNamirnica unutar recepta je null, pa da ne bi bila null nego da bude empty
-        recept.setListaNamirnica(new ArrayList<Namirnica>());
-        // isto za  kolicine
-        List<Integer> listaKolicina = new ArrayList<Integer>();
-        recept.setListaKolicina(listaKolicina);
-*/
+
 
         LOG.info("sends new recept to form with data: " + recept);
         model.addAttribute("recept", recept);
@@ -130,14 +124,12 @@ public class ReceptiController {
 
     @RequestMapping(params = { "addNamirnica" },  method = RequestMethod.POST)
     public String addNamirnica(Recept recept,
-                               @RequestParam(value = "nid") Long namirnica_id,
+                               @RequestParam(value = "nid") Namirnica namirnica, // calls StringToNamirnicaConverter
                                @RequestParam(value = "kolicina") Integer kolicina, Model model){
-        System.out.println("inside addNamirnica method klase ReceptiController, namirnica_id: " + namirnica_id + " kolicina: " + kolicina);
+        System.out.println("inside addNamirnica method klase ReceptiController");
         System.out.println(recept);
 
-       // rekonstruisiListuNamirnicaNaOsnovuIdova(recept);
-
-        receptService.addNamirnica(recept, namirnica_id, kolicina);
+        receptService.addNamirnica(recept, namirnica, kolicina);
 
         List<Namirnica> namirniceSelect = findNotInRecept(recept);
         model.addAttribute("namirniceSelect", namirniceSelect);

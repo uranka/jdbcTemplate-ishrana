@@ -68,17 +68,18 @@ public class InMemoryNamirnicaService implements NamirnicaService {
 
     @Override
     public Namirnica findOne(Long id) {
+        System.out.println("inside findOne namirnice");
         return map.get(id);
-    }
+    } // sta ako nema trazene namirnice?
 
     // if namirnica does not have id give it id and save it
     // otherwise just save it with its id
-    // sad to nema id sam prebacila u id je nula zbog problema sa slanjem
+    // sad to nema id sam prebacila u id je nula zbog problema sa slanjem--- MORAS RESITI OVO DA MOZE SA null da se radi!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // forme u kojoj je id na null
     @Override
     public Namirnica save(Namirnica namirnica) {
         //if (namirnica.getNamirnica_id() == null) {
-        if (namirnica.getNamirnica_id() == 0) {
+        if (namirnica.getNamirnica_id() == 0) { // NECU OVAKO,  hocu da stize namirnica sa id=null
             namirnica.setNamirnica_id(sequence.getAndIncrement());
             System.out.println("**************");
         }

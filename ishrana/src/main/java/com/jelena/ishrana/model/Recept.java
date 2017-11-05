@@ -1,7 +1,8 @@
 package com.jelena.ishrana.model;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
 
 public class Recept {
     private Long recept_id;
@@ -13,15 +14,14 @@ public class Recept {
 // private String uputstvo;
 // slika recepta
 
-//	Map<Namirnica, Integer> mapa koja povezuje namirnicu sa kolicinom,
-// za ovo mi treba da uradim hashcode i equals klase Namirnica  klase
-// Namirnica je jedinstvena ona je kljuc, a kolicina nije, ona je value
-// recept se pravi od namirnica koje postoje u bazi
-
-   // private Map<Namirnica, Integer> mapaNamirnica;
-
     private List<Namirnica> listaNamirnica;
     private List<Integer> listaKolicina;
+
+    public Recept() {
+        // da mi ove liste ne budu null, da ih imam, da budu prazne tj. velicine 0
+        listaNamirnica = new ArrayList<>();
+        listaKolicina = new ArrayList<>();
+    }
 
     public Long getRecept_id() {
         return recept_id;
@@ -51,13 +51,7 @@ public class Recept {
     public void setVremeKuvanja(int vremeKuvanja) {
         this.vremeKuvanja = vremeKuvanja;
     }
-//
-//    public Map<Namirnica, Integer> getMapaNamirnica() {
-//        return mapaNamirnica;
-//    }
-//    public void setMapaNamirnica(Map<Namirnica, Integer> mapaNamirnica) {
-//        this.mapaNamirnica = mapaNamirnica;
-//    }
+
 
 
     public List<Namirnica> getListaNamirnica() {

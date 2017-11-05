@@ -51,7 +51,7 @@ public class NamirniceController {
         model.addAttribute("namirnica", namirnica);
         return "namirnicaForm";
     }
-
+/*
 
     // @ModelAttribute indicates that it indicates the argument should be retrieved from the model.
     // @ModelAttribute means supply this object to a Controller method
@@ -68,6 +68,22 @@ public class NamirniceController {
         }
         return "redirect:namirnice/all"; // daje http://localhost:8080/ishrana/namirnice/all GET metod
     }
+*/
+
+
+    @RequestMapping(params="save_button", method = RequestMethod.POST)
+    public String save(Namirnica namirnica) {
+        System.out.println("snimam namirnicu");
+        namirnicaService.save(namirnica);
+        return "redirect:namirnice/all";
+    }
+
+    @RequestMapping(params="cancel_button", method = RequestMethod.POST)
+    public String cancel(){
+        return "redirect:namirnice/all";
+    }
+
+
 
     @RequestMapping("/add")
     public String dodajNovuNamirnicu(Model model) {
@@ -80,7 +96,7 @@ public class NamirniceController {
         // postavila sam na 0 umesto da bude null sto inace bude posle new Namirnica()
         // pa nek joj se u save metodi(InMemoryNamirnicaService) dodeli pravi id, ovo je privremeni
 
-        namirnica.setNamirnica_id(0);
+        namirnica.setNamirnica_id(0); // NECU OVAKO, hocu da nova namirnica ima null za id, a ne 0!!!!!!!!
 
         System.out.println(namirnica);
         model.addAttribute("namirnica", namirnica);
