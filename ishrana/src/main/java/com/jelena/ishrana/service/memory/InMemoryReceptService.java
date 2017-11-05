@@ -3,9 +3,8 @@ package com.jelena.ishrana.service.memory;
 import com.jelena.ishrana.model.Namirnica;
 import com.jelena.ishrana.model.Recept;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.jelena.ishrana.service.ReceptService;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;

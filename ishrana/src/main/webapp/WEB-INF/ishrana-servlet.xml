@@ -7,7 +7,16 @@
 
 
     <mvc:annotation-driven/>
-    <context:component-scan base-package="com.jelena.ishrana" />
+    <!-- <context:component-scan base-package="com.jelena.ishrana" />  -->
+
+    <context:component-scan base-package="com.jelena.ishrana.controller" />
+    <context:component-scan base-package="com.jelena.ishrana.converter" />
+    <context:component-scan base-package="com.jelena.ishrana.model" />
+    <context:component-scan base-package="com.jelena.ishrana.repository" />
+    <context:component-scan base-package=" com.jelena.ishrana.service.db" />
+
+
+
     <context:annotation-config />
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -25,5 +34,12 @@
         </property>
     </bean>
 
+    <bean id="dataSource"
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="url" value="jdbc:mysql://localhost:3306/ishrana" />
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <property name="username" value="root" />
+        <property name="password" value="" />
+    </bean>
 
 </beans>

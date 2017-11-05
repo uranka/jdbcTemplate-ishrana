@@ -2,6 +2,7 @@ package com.jelena.ishrana.service.memory;
 
 import com.jelena.ishrana.model.Namirnica;
 import com.jelena.ishrana.model.Recept;
+import com.jelena.ishrana.service.ReceptService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -84,6 +85,8 @@ public class InMemoryReceptServiceTest {
     public void testSave() {
         Recept r = new Recept();
         r.setNaziv("novi recept");
+        // a da dodam i sve ostale komponente recepta i proverim sta je snimljeno?
+
         Recept saved = receptService.save(r);
 
         Assert.assertNotNull(saved.getRecept_id());

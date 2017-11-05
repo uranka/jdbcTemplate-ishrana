@@ -1,6 +1,7 @@
 package com.jelena.ishrana.service.memory;
 
 import com.jelena.ishrana.model.Namirnica;
+import com.jelena.ishrana.service.NamirnicaService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,12 +9,12 @@ import org.junit.Test;
 import java.util.List;
 
 public class InMemoryNamirnicaServiceTest {
-    private NamirnicaService namirnicaService; // NETESTIRANA KLASA
+    private NamirnicaService namirnicaService;
 
     @Before
     public void setUp() {
         namirnicaService = new InMemoryNamirnicaService(); // puni mapu namirnica sa tri namirnice
-        Namirnica n1 = new Namirnica(); // i ovo bi bila jos jedna namirnica
+        Namirnica n1 = new Namirnica();  // jos jedna namirnica
         n1.setNamirnica_id(1000L);
         n1.setNaziv("kisela jabuka");
         n1.setP(0);
@@ -21,8 +22,17 @@ public class InMemoryNamirnicaServiceTest {
         n1.setUh(12);
         n1.setKcal(40);
         n1.setKategorija("voće");
-        // treba snimiti ovu namirnicu, logicno je da je prvo pisan test za namirnicaService
         namirnicaService.save(n1);
+
+        Namirnica n2 = new Namirnica(); // jos jedna namirnica
+        n2.setNamirnica_id(2000L);
+        n2.setNaziv("slatka jabuka");
+        n2.setP(0);
+        n2.setM(0);
+        n2.setUh(15);
+        n2.setKcal(48);
+        n2.setKategorija("voće");
+        namirnicaService.save(n2);
     }
 
     @Test
@@ -35,7 +45,7 @@ public class InMemoryNamirnicaServiceTest {
     @Test
     public void testFindAll() {
         List<Namirnica> namirnice = namirnicaService.findAll();
-        Assert.assertEquals(4, namirnice.size()); // tri iz konstruktora i jedna dodata
+        Assert.assertEquals(5, namirnice.size()); // tri namirnice iz konstruktora i jos dvedodate u setup-u
 
         Namirnica n1 = namirnice.get(0);
         Namirnica n2 = namirnice.get(1);
@@ -59,25 +69,36 @@ public class InMemoryNamirnicaServiceTest {
     public void testSave() {
         Namirnica n = new Namirnica();
         n.setNaziv("nova namirnica");
+        n.setNaziv("nova namirnica");
+        n.setKategorija("meso");
+        n.setP(20);
+        n.setM(5);
+        n.setUh(0);
+        n.setKcal(300);
         n.setNamirnica_id(0L); // ja bih ovog da se resim, ali ne znam kako!!!!!!!!!!!!!!!!!!!!!
         Namirnica saved = namirnicaService.save(n);
 
-        Assert.assertNotNull(saved.getNamirnica_id());
+        Assert.assertNotNull(saved.getNamirnica_id()); // da li moze sad ovo
         Assert.assertEquals("nova namirnica", namirnicaService.findOne(saved.getNamirnica_id()).getNaziv());
+        Assert.assertEquals("meso", namirnicaService.findOne(saved.getNamirnica_id()).getKategorija());
+        Assert.assertEquals(20, namirnicaService.findOne(saved.getNamirnica_id()).getP(), 0.01);
+        Assert.assertEquals(5, namirnicaService.findOne(saved.getNamirnica_id()).getM(), 0.01);
+        Assert.assertEquals(0, namirnicaService.findOne(saved.getNamirnica_id()).getUh(), 0.01);
+        Assert.assertEquals(300, namirnicaService.findOne(saved.getNamirnica_id()).getKcal(), 0.01);
     }
 
     @Test
     public void testRemove() {
-        // uveri se da imamo namirnice 1000L, mozgal bih dodati jos jednu
-        // uveri se da je uklonjena 1000L, a da nije uklonjena ta druga koju treba da dodam
-
+        // uveri se da imamo namirnice 1000L i 2000L
         Assert.assertNotNull(namirnicaService.findOne(1000L));
+        Assert.assertNotNull(namirnicaService.findOne(2000L));
 
-        // ukloni namirnicu 1000L, ali ne i namirnicu.....
+        // ukloni namirnicu 1000L, ali ne i namirnicu 2000L
         namirnicaService.remove(1000L);
 
-        // proveri da li 1000L uklonjen, a ona druga nije....
+        // proveri da li je 1000L uklonjena, a 2000L nije
         Assert.assertNull(namirnicaService.findOne(1000L));
+        Assert.assertNotNull(namirnicaService.findOne(2000L));
     }
 
     // testira da li pokusaj uklanjanja namirnice sa nepostojecim id baca izuzetak
@@ -88,6 +109,8 @@ public class InMemoryNamirnicaServiceTest {
         // probaj da je uklonis
         namirnicaService.remove(30L);
     }
+
+
 
 
 }

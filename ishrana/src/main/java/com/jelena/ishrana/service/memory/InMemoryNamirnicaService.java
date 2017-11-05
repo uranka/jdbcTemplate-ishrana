@@ -1,6 +1,7 @@
 package com.jelena.ishrana.service.memory;
 
 import com.jelena.ishrana.model.Namirnica;
+import com.jelena.ishrana.service.NamirnicaService;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -68,9 +69,9 @@ public class InMemoryNamirnicaService implements NamirnicaService {
 
     @Override
     public Namirnica findOne(Long id) {
-        System.out.println("inside findOne namirnice");
         return map.get(id);
     } // sta ako nema trazene namirnice?
+
 
     // if namirnica does not have id give it id and save it
     // otherwise just save it with its id

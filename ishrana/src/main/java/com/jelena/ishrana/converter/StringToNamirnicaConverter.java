@@ -1,7 +1,7 @@
 package com.jelena.ishrana.converter;
 
 import com.jelena.ishrana.model.Namirnica;
-import com.jelena.ishrana.service.memory.NamirnicaService;
+import com.jelena.ishrana.service.NamirnicaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 

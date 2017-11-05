@@ -2,14 +2,12 @@ package com.jelena.ishrana.controller;
 
 import com.jelena.ishrana.model.Namirnica;
 import com.jelena.ishrana.model.Recept;
-import com.jelena.ishrana.service.memory.NamirnicaService;
-import com.jelena.ishrana.service.memory.ReceptService;
+import com.jelena.ishrana.service.NamirnicaService;
+import com.jelena.ishrana.service.ReceptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.jelena.ishrana.service.memory;
+package com.jelena.ishrana.service;
 
 import com.jelena.ishrana.model.Namirnica;
 import com.jelena.ishrana.model.Recept;
