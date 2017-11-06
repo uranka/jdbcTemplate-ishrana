@@ -3,6 +3,7 @@ package com.jelena.ishrana.repository.jdbc;
 import com.jelena.ishrana.model.Namirnica;
 import com.jelena.ishrana.repository.NamirnicaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -39,14 +40,38 @@ public class JdbcNamirnicaRepository implements NamirnicaRepository{
         return null;
     }
 
+    // vraca null ako nema namirnice sa datim id u bazi
+    // ako pronadje vise od jedne namirnice sa datim id baca izuzetak IncorrectResultSizeDataAccessException
+    // hvatam ga u gde
+    // ako nadje tacno jednu namirnicu sa datim id vraca objekat Namirnica koji predstavlja tu namirnicu
     @Override
-    public Namirnica findOne(Long id) {
+    public Namirnica findOne(Long id) /*throws IncorrectResultSizeDataAccessException */ {
+        System.out.println("inside jdbc findOne");
+
+        List<Namirnica> listaNamirnica = jdbcTemplate.query("select * from namirnice where namirnica_id = ?",
+                new Object[] { id },
+                new NamirnicaRowMapper());
+
+        //testiram sta se desava kada imam dve namirnice u listi
+        //na jednu nadjenu dodajem jos i ovu
+        //Namirnica testNamirnica = new Namirnica();
+        //listaNamirnica.add(testNamirnica);
+
+        if (listaNamirnica.size() == 1) {
+            return listaNamirnica.get(0);
+        }
+        //IncorrectResultSizeDataAccessException(int expectedSize, int actualSize)
+        if (listaNamirnica.size() > 1){
+            throw new IncorrectResultSizeDataAccessException(1, listaNamirnica.size());
+        }
         return null;
     }
 
     @Override
     public Namirnica save(Namirnica namirnica) {
-        return null;
+        jdbcTemplate.update("replace into namirnice (namirnica_id, naziv, kcal, p, m, uh, kategorija) values(?, ?, ?, ?, ?, ?, ?)",
+                namirnica.getNamirnica_id(), namirnica.getNaziv(), namirnica.getKcal(), namirnica.getP(), namirnica.getM(), namirnica.getUh(), namirnica.getKategorija());
+        return namirnica;
     }
 
     @Override

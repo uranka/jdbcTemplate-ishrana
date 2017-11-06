@@ -28,12 +28,12 @@ public class InDbNamirnicaService implements NamirnicaService {
 
     @Override
     public Namirnica findOne(Long id) {
-        return null;
+        return namirnicaRepository.findOne(id);
     }
 
     @Override
     public Namirnica save(Namirnica namirnica) {
-        return null;
+        return namirnicaRepository.save(namirnica);
     }
 
     @Override
