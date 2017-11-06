@@ -75,8 +75,14 @@ public class JdbcNamirnicaRepository implements NamirnicaRepository{
     }
 
     @Override
-    public void remove(Long id) throws IllegalArgumentException {
-
+    public void remove(Long id) {
+        /*
+        int count = jdbcTemplate
+                .update("delete from  namirnice where namirnica_id = ?", id);
+        if (count != 1) throw ...;
+        */
+        jdbcTemplate
+                .update("delete from  namirnice where namirnica_id = ?", id);
     }
 
 

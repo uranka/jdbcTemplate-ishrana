@@ -38,6 +38,6 @@ public class InDbNamirnicaService implements NamirnicaService {
 
     @Override
     public void remove(Long id) throws IllegalArgumentException {
-
+        namirnicaRepository.remove(id);
     }
 }
