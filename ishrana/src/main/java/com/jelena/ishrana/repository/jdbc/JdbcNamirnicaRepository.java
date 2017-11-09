@@ -37,7 +37,9 @@ public class JdbcNamirnicaRepository implements NamirnicaRepository{
 
     @Override
     public List<Namirnica> findByCategory(String category) {
-        return null;
+        return jdbcTemplate.query("select * from namirnice where kategorija = ?",
+                new Object[] { category },
+                new NamirnicaRowMapper());
     }
 
     // vraca null ako nema namirnice sa datim id u bazi
@@ -51,11 +53,6 @@ public class JdbcNamirnicaRepository implements NamirnicaRepository{
         List<Namirnica> listaNamirnica = jdbcTemplate.query("select * from namirnice where namirnica_id = ?",
                 new Object[] { id },
                 new NamirnicaRowMapper());
-
-        //testiram sta se desava kada imam dve namirnice u listi
-        //na jednu nadjenu dodajem jos i ovu
-        //Namirnica testNamirnica = new Namirnica();
-        //listaNamirnica.add(testNamirnica);
 
         if (listaNamirnica.size() == 1) {
             return listaNamirnica.get(0);

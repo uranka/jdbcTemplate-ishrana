@@ -2,7 +2,9 @@ package com.jelena.ishrana.service.db;
 
 import com.jelena.ishrana.model.Namirnica;
 import com.jelena.ishrana.model.Recept;
+import com.jelena.ishrana.repository.ReceptRepository;
 import com.jelena.ishrana.service.ReceptService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,15 +14,17 @@ public class InDbReceptService  implements ReceptService{
 
 
     // koristi ReceptRepository
+    @Autowired
+    private ReceptRepository receptRepository;
 
     @Override
     public List<Recept> findAll() {
-        return null;
+        return receptRepository.findAll();
     }
 
     @Override
     public Recept findOne(Long id) {
-        return null;
+        return receptRepository.findOne(id);
     }
 
     @Override
