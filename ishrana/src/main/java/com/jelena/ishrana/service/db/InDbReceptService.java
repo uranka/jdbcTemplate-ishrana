@@ -29,21 +29,21 @@ public class InDbReceptService  implements ReceptService{
 
     @Override
     public Recept save(Recept recept) {
-        return null;
+        return receptRepository.save(recept);
     }
 
     @Override
     public void remove(Long id) throws IllegalArgumentException {
-
+        receptRepository.remove(id);
     }
 
     @Override
     public void removeNamirnica(Recept recept, Long namirnica_id) throws IllegalArgumentException {
-
+        receptRepository.removeNamirnica(recept, namirnica_id);
     }
 
     @Override
     public void addNamirnica(Recept recept, Namirnica namirnica, Integer kolicina) {
-
+        receptRepository.addNamirnica(recept, namirnica, kolicina);
     }
 }

@@ -75,7 +75,8 @@ public class NamirniceController {
         // postavila sam na 0 umesto da bude null sto inace bude posle new Namirnica()
         // pa nek joj se u save metodi(InMemoryNamirnicaService) dodeli pravi id, ovo je privremeni
 
-        namirnica.setNamirnica_id(0); // NECU OVAKO, hocu da nova namirnica ima null za id, a ne 0!!!!!!!!
+        namirnica.setNamirnica_id(0L); // NECU OVAKO, hocu da nova namirnica ima null za id, a ne 0!!!!!!!!
+        // prepravljeni long na Long kod setNamirnica_id pa vidi da li je to resiilo ovaj problem
 
         System.out.println(namirnica);
         model.addAttribute("namirnica", namirnica);

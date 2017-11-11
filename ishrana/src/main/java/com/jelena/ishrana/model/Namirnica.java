@@ -15,7 +15,7 @@ public class Namirnica {
     public Long getNamirnica_id() {
         return namirnica_id;
     }
-    public void setNamirnica_id(long namirnica_id) {
+    public void setNamirnica_id(Long namirnica_id) {
         this.namirnica_id = namirnica_id;
     }
 
