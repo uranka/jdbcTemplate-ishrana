@@ -73,13 +73,10 @@ public class JdbcNamirnicaRepository implements NamirnicaRepository{
 
     @Override
     public void remove(Long id) {
-        /*
-        int count = jdbcTemplate
-                .update("delete from  namirnice where namirnica_id = ?", id);
-        if (count != 1) throw ...;
-        */
+        System.out.println("inside remove namirnica klase JdbcNamirnicaRepository");
         jdbcTemplate
-                .update("delete from  namirnice where namirnica_id = ?", id);
+                .update("delete from  namirnice where namirnica_id = ?", id); // moze da baci DataIntegrityViolationException
+
     }
 
 
