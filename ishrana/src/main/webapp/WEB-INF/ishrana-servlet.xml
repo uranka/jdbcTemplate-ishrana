@@ -9,11 +9,20 @@
     <mvc:annotation-driven/>
     <!-- <context:component-scan base-package="com.jelena.ishrana" />  -->
 
+    <!--
+
     <context:component-scan base-package="com.jelena.ishrana.controller" />
     <context:component-scan base-package="com.jelena.ishrana.converter" />
     <context:component-scan base-package="com.jelena.ishrana.model" />
     <context:component-scan base-package="com.jelena.ishrana.repository" />
     <context:component-scan base-package=" com.jelena.ishrana.service.db" />
+
+-->
+
+    <context:component-scan base-package="com.jelena.ishrana.controller" />
+    <context:component-scan base-package="com.jelena.ishrana.converter" />
+    <context:component-scan base-package="com.jelena.ishrana.model" />
+    <context:component-scan base-package=" com.jelena.ishrana.service.memory" />
 
 
 
