@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,6 +97,10 @@ public class ReceptiController {
         LOG.info("getting recept with recept_id = " + recept_id);
         Recept recept = receptService.findOne(recept_id);
         model.addAttribute("recept", recept);
+
+        Map<String, Double> map = receptService.analizaRecepta(recept_id);
+        model.addAttribute("map", map);
+
         return "recept";
     }
 

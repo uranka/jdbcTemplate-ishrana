@@ -136,5 +136,11 @@ public class InMemoryReceptService implements ReceptService {
 
     }
 
+    // nije implementirano
+    @Override
+    public Map<String, Double> analizaRecepta(Long id) {
+        return null;
+    }
+
 
 }

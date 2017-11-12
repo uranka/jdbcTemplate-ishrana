@@ -28,5 +28,11 @@
 </c:if>
 </table>
 
+<h2>Analiza recepta</h2>
+<p>Ukupno kalorija: ${map.kcalUkupno}</p>
+<p>Ukupno proteina: ${map.pUkupno}</p>
+<p>Ukupno masti: ${map.mUkupno}</p>
+<p>Ukupno ugljenih hidrata: ${map.uhUkupno}</p>
+
 </body>
 </html>

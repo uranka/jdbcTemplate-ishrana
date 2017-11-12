@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class InDbReceptService  implements ReceptService{
@@ -45,5 +46,10 @@ public class InDbReceptService  implements ReceptService{
     @Override
     public void addNamirnica(Recept recept, Namirnica namirnica, Integer kolicina) {
         receptRepository.addNamirnica(recept, namirnica, kolicina);
+    }
+
+    @Override
+    public Map<String, Double> analizaRecepta(Long id) {
+        return receptRepository.analizaRecepta(id);
     }
 }

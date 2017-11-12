@@ -17,8 +17,7 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Repository
 public class JdbcReceptRepository implements ReceptRepository{
@@ -172,6 +171,22 @@ public class JdbcReceptRepository implements ReceptRepository{
         recept.getListaKolicina().add(kolicina);
     }
 
+    @Override
+    public Map<String, Double> analizaRecepta(Long id){
+        ReceptAnalizaRowCallbackHandler receptAnalizaRowCallbackHandler =
+                new ReceptAnalizaRowCallbackHandler();
+        jdbcTemplate.query("SELECT n.kcal*rn.kolicina_namirnice/100 AS kcal," +
+                        "n.p*rn.kolicina_namirnice/100 AS p," +
+                        "n.m*rn.kolicina_namirnice/100 AS m," +
+                        "n.uh*rn.kolicina_namirnice/100 AS uh\n" +
+                        "FROM namirnice n JOIN recepti_namirnice rn\n" +
+                        "ON n.namirnica_id = rn.namirnica_id\n" +
+                        "WHERE recept_id = ?",
+                new Object[] {id},
+                receptAnalizaRowCallbackHandler);
+        return receptAnalizaRowCallbackHandler.getMap();
+    }
+
 
     private static final class ReceptRowCallbackHandler implements RowCallbackHandler {
         private List<Recept> result = new ArrayList<>();
@@ -242,6 +257,31 @@ public class JdbcReceptRepository implements ReceptRepository{
 
         public List<Recept> getRecepti() {
             return result;
+        }
+    }
+
+
+    private static final class ReceptAnalizaRowCallbackHandler implements RowCallbackHandler {
+        private Map<String, Double> map = new HashMap<>();
+        private Double kcalUkupno = 0.0;
+        private Double pUkupno = 0.0;
+        private Double mUkupno = 0.0;
+        private Double uhUkupno = 0.0;
+
+        public void processRow(ResultSet rs) throws SQLException {
+            kcalUkupno += rs.getDouble("kcal"); // kcal prema kolicini namirnice
+            pUkupno += rs.getDouble("p"); // proteini za datu kolicinu namirnice
+            mUkupno += rs.getDouble("m");
+            uhUkupno += rs.getDouble("uh");
+        }
+
+        public Map<String, Double> getMap() {
+            // postavljam podatke u mapu
+            map.put("kcalUkupno", kcalUkupno);
+            map.put("pUkupno", pUkupno);
+            map.put("mUkupno", mUkupno);
+            map.put("uhUkupno", uhUkupno);
+            return map;
         }
     }
 }
