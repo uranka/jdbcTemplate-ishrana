@@ -127,6 +127,11 @@ public class ReceptiController {
         System.out.println("inside addNamirnica method klase ReceptiController");
         System.out.println(recept);
 
+// ne dozvoli da se primi null za kolicinu, ili da addNamirnica kolicinu null pretvori u 0
+// nemam nikakve validacije u projektu za sada pa je
+// uradjeno ovo drugo i to za klasu JdbcReceptRepository koja radi sa bazom,
+// isto bi trebalo uraditi i za in memory impl. klasa InMemoryReceptService
+
         receptService.addNamirnica(recept, namirnica, kolicina);
 
         List<Namirnica> namirniceSelect = findNotInRecept(recept);
@@ -138,7 +143,7 @@ public class ReceptiController {
     }
 
     // vraca listu namirnica koje nisu u receptu
-    // ako takvih nema vraca praznu listu--proveri ovo
+    // ako takvih nema vraca praznu listu
     // bitno zbog toga sto brisanje namirnice radi prema id, ne mogu da dozvolim da imam u listi namirnica vise sa istim id-om
     private List<Namirnica> findNotInRecept(Recept recept) {
         List<Namirnica> namirniceAll = namirnicaService.findAll();

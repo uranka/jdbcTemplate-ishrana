@@ -30,22 +30,6 @@ public class JdbcReceptRepository implements ReceptRepository{
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-/*
-    @Override
-    public List<Recept> findAll() {
-        ReceptRowCallbackHandler receptRowCallbackHandler =
-                new ReceptRowCallbackHandler();
-        jdbcTemplate.query("SELECT r.naziv, r.recept_id, r.vreme_pripreme, r.vreme_kuvanja, rn.namirnica_id, rn.kolicina_namirnice,\n" +
-                        "n.naziv, n.kcal, n.p, n.m, n.uh, n.kategorija\n" +
-                        "FROM recepti r JOIN recepti_namirnice rn\n" +
-                        "ON r.recept_id = rn.recept_id\n" +
-                        "JOIN namirnice n\n" +
-                        "ON n.namirnica_id = rn.namirnica_id\n" +
-                        "ORDER BY r.recept_id",
-                receptRowCallbackHandler);
-        return receptRowCallbackHandler.getRecepti();
-    }
-*/
 // ova varijanta moze da prikaze i recepte koji nemaju svoje namirnice
     @Override
     public List<Recept> findAll() {
@@ -61,24 +45,6 @@ public class JdbcReceptRepository implements ReceptRepository{
                 receptRowCallbackHandler);
         return receptRowCallbackHandler.getRecepti();
     }
-/*
-
-    @Override
-    public Recept findOne(Long id) {
-        ReceptRowCallbackHandler receptRowCallbackHandler =
-                new ReceptRowCallbackHandler();
-        jdbcTemplate.query("select r.naziv, r.recept_id, r.vreme_pripreme, r.vreme_kuvanja, rn.namirnica_id, rn.kolicina_namirnice,\n" +
-                "n.naziv, n.kcal, n.p, n.m, n.uh, n.kategorija\n" +
-                "from recepti r join recepti_namirnice rn\n" +
-                "on r.recept_id = rn.recept_id\n" +
-                "join namirnice n\n" +
-                "on n.namirnica_id = rn.namirnica_id\n" +
-                "where r.recept_id = ?",
-                new Object[] { id },
-                receptRowCallbackHandler);
-        return receptRowCallbackHandler.getRecept();
-    }
-*/
 
     // varijanta koja pronalazi recept iako recept nema nijednu namirnicu
     @Override
@@ -200,6 +166,9 @@ public class JdbcReceptRepository implements ReceptRepository{
     @Override
     public void addNamirnica(Recept recept, Namirnica namirnica, Integer kolicina) {
         recept.getListaNamirnica().add(namirnica);
+        if (kolicina == null) {
+            kolicina = 0;
+        }
         recept.getListaKolicina().add(kolicina);
     }
 
@@ -233,16 +202,6 @@ public class JdbcReceptRepository implements ReceptRepository{
             namirnica.setNamirnica_id(rs.getLong("rn.namirnica_id"));
             System.out.println("postavljeni id namirnice je " + namirnica.getNamirnica_id()); // ovde stavlja 0, a u bazi imam null!!!!
             // getLong returns the column value; if the value is SQL NULL, the value returned is 0 !!!
-
-            /*
-            Long namirnicaId = rs.getLong("rn.namirnica_id");
-            if (namirnicaId == 0) {
-                namirnica.setNamirnica_id(null);
-            }
-            else {
-                namirnica.setKcal(namirnicaId);
-            }
-            */
 
             namirnica.setNaziv(rs.getString("n.naziv"));
             namirnica.setKcal(rs.getDouble("n.kcal"));
