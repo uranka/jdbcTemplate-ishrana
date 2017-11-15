@@ -4,17 +4,20 @@ import com.jelena.ishrana.model.Namirnica;
 import com.jelena.ishrana.repository.NamirnicaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.List;
 import javax.sql.DataSource;
 
-// po ugledu na
-// https://gitlab.levi9.com/d.gajic/code9/blob/master/tutorial/workshop3/lab11-end/src/main/java/rs/code9/taster/repository/jdbc/JdbcCategoryRepository.java
 
 
 @Repository
@@ -64,12 +67,47 @@ public class JdbcNamirnicaRepository implements NamirnicaRepository{
         return null;
     }
 
+
     @Override
     public Namirnica save(Namirnica namirnica) {
-        jdbcTemplate.update("replace into namirnice (namirnica_id, naziv, kcal, p, m, uh, kategorija) values(?, ?, ?, ?, ?, ?, ?)",
-                namirnica.getNamirnica_id(), namirnica.getNaziv(), namirnica.getKcal(), namirnica.getP(), namirnica.getM(), namirnica.getUh(), namirnica.getKategorija());
+        if (namirnica.getNamirnica_id() != null) {
+            // update old namirnica
+            PreparedStatementCreatorFactory pscFactory = new PreparedStatementCreatorFactory(
+                    "UPDATE namirnice \n" +
+                            "SET naziv = ?, kcal = ?, p = ?, m = ?, uh = ?, kategorija = ?\n" +
+                            "WHERE namirnica_id = ?",
+                    new int[] {Types.VARCHAR, Types.FLOAT, Types.FLOAT, Types.FLOAT, Types.FLOAT,
+                            Types.VARCHAR, Types.BIGINT });
+
+            PreparedStatementCreator psc = pscFactory.newPreparedStatementCreator(
+                    new Object[] {namirnica.getNaziv(), namirnica.getKcal(), namirnica.getP(), namirnica.getM(), namirnica.getUh(),
+                    namirnica.getKategorija(), namirnica.getNamirnica_id()});
+
+            jdbcTemplate.update(psc);
+        }
+        else {
+            // save new namirnica
+            PreparedStatementCreatorFactory pscFactory2 = new PreparedStatementCreatorFactory(
+                    "INSERT INTO namirnice (naziv, kcal, p, m, uh, kategorija) VALUES\n" +
+                            "(?, ?, ?, ?, ?, ?)\n",
+                    new int[] {Types.VARCHAR, Types.FLOAT, Types.FLOAT, Types.FLOAT, Types.FLOAT, Types.VARCHAR});
+            pscFactory2.setReturnGeneratedKeys(true);
+
+            KeyHolder holder = new GeneratedKeyHolder();
+            PreparedStatementCreator psc2 = pscFactory2.newPreparedStatementCreator(
+                    new Object[] {namirnica.getNaziv(), namirnica.getKcal(), namirnica.getP(), namirnica.getM(), namirnica.getUh(),
+                            namirnica.getKategorija()});
+
+            jdbcTemplate.update(psc2, holder);
+
+            // snimi id namirnice
+            namirnica.setNamirnica_id(holder.getKey().longValue());
+        }
+        System.out.println("namirnica iz metode save u bazu " + namirnica);
         return namirnica;
     }
+
+
 
     @Override
     public void remove(Long id) {

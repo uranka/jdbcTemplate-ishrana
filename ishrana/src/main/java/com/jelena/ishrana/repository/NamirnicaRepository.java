@@ -8,6 +8,6 @@ public interface NamirnicaRepository {
     List<Namirnica> findAll();
     List<Namirnica> findByCategory (String category);
     Namirnica findOne(Long id);
-    Namirnica save(Namirnica namirnica); // insert i update objedinjeni u replace into
+    Namirnica save(Namirnica namirnica);
     void remove(Long id) /*throws IllegalArgumentException*/; // ovo ce biti delete
 }

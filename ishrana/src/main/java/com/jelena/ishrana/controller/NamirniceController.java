@@ -69,15 +69,6 @@ public class NamirniceController {
         System.out.println("inside dodajNovuNamirnicu method");
         Namirnica namirnica = new Namirnica();
 
-        // problem kad se ne postavi id namirnice!!!!!!!!!!!!
-        // dobija se prilikom slanja forme 400 bad request
-        // zasto forma ne moze da salje za id koje je hidden field null vrednost???
-        // postavila sam na 0 umesto da bude null sto inace bude posle new Namirnica()
-        // pa nek joj se u save metodi(InMemoryNamirnicaService) dodeli pravi id, ovo je privremeni
-
-        //namirnica.setNamirnica_id(0L); // NECU OVAKO, hocu da nova namirnica ima null za id, a ne 0!!!!!!!!
-        // prepravljeni long na Long kod setNamirnica_id pa vidi da li je to resiilo ovaj problem
-
         System.out.println(namirnica);
         model.addAttribute("namirnica", namirnica);
         model.addAttribute("kategorije", categories);
