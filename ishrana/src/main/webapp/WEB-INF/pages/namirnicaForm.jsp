@@ -16,10 +16,7 @@
 <c:url var="action" value="/namirnice" />
 <form:form modelAttribute="namirnica" method="POST"  action="${action}">
 
-    <c:out value="${action}"/>-----${action} <br/>
-    naziv: ${namirnica.naziv}  kcal: ${namirnica.kcal}   namirnica_id: ${namirnica.namirnica_id}
-
-<table border="1" cellpadding="10">
+<table>
     <tr>
         <td><form:label path="naziv">Naziv</form:label></td>
         <td><form:input path="naziv"/></td>
@@ -28,10 +25,6 @@
     <%--  skriveno polje koje prenosi id namirnice --%>
     <form:hidden path="namirnica_id" value="${namirnica.namirnica_id}"/>
 
-
-    <%--
-        <form:hidden path="namirnica_id" value="555"/>
-    --%>
 
         <tr>
             <td><form:label path="kcal">Energija(kcal):</form:label></td>

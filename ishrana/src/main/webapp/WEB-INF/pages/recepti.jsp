@@ -8,7 +8,7 @@
 <body>
 <jsp:include page="includes/header.jsp" />
 <h1>Recepti</h1>
-<table border="1" cellpadding="10">
+<table border="1">
     <tr>
         <th>naziv</th>
         <th></th>

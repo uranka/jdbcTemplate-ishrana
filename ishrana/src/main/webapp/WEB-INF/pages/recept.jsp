@@ -14,7 +14,7 @@
 <p>Vreme pripreme: ${recept.vremePripreme} minuta</p>
 <p>Vreme kuvanja: ${recept.vremeKuvanja} minuta</p>
 
-<table border="1" cellpadding="10">
+<table >
 <tr>
     <td>NAMIRNICA</td>
     <td>KOLIČINA (g)</td>

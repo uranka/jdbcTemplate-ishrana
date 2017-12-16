@@ -13,7 +13,7 @@
 
 <c:url var="action" value="/recepti" />
 <form:form modelAttribute="recept" method="POST"  action="${action}">
-    <table border="1" cellpadding="10">
+    <table>
         <tr>
             <td><form:label path="naziv">Naziv</form:label></td>
             <td><form:input path="naziv"/></td>
@@ -46,7 +46,7 @@
                 <form:hidden path="listaNamirnica[${status.index}].namirnica_id" />
 
                 <tr>
-                    <td><form:label path="listaNamirnica[${status.index}].naziv"> ${recept.listaNamirnica[status.index].naziv} --  ${status.index}--   </form:label></td>
+                    <td><form:label path="listaNamirnica[${status.index}].naziv"> ${recept.listaNamirnica[status.index].naziv} </form:label></td>
                     <td><form:input type="number" path="listaKolicina[${status.index}]" min="0.0" value="${recept.listaKolicina[status.index]}"/></td>
                     <td>
                         <button type="submit" name="removeNamirnica"
