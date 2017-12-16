@@ -11,6 +11,42 @@ header h1 {
 header {
     border-bottom : 2px solid green;
 }
+
+
+nav ul li {
+    list-style-type: none;/*skida kruzic ispred nabrajanja */
+    display: inline;/*omogucava horizontalno poredjane stavke */
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: white;
+    padding: 14px 25px;
+    text-align: center;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+}
+/* unvisited link */
+nav ul li a:link {
+    background-color: #f44336;
+}
+
+/* visited link */
+nav ul li a:visited {
+    background-color: #f44336;
+}
+
+/* mouse over link */
+nav ul li a:hover {
+    background-color: red;
+}
+
+/* selected link */
+nav ul li a:active {
+    background-color: red;
+}
+
+
 footer {
     background-color : black;
     color: white;
