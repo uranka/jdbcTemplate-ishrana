@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -31,10 +32,18 @@
 </table>
 
 <h2>Analiza recepta</h2>
-<p>Ukupno kalorija: ${map.kcalUkupno}</p>
-<p>Ukupno proteina: ${map.pUkupno}</p>
-<p>Ukupno masti: ${map.mUkupno}</p>
-<p>Ukupno ugljenih hidrata: ${map.uhUkupno}</p>
+<p>Ukupno kalorija:
+<fmt:formatNumber type="number" maxFractionDigits="2" value="${map.kcalUkupno}" />
+</p>
+<p>Ukupno proteina:
+    <fmt:formatNumber type="number" maxFractionDigits="2" value="${map.pUkupno}" />
+</p>
+<p>Ukupno masti:
+    <fmt:formatNumber type="number" maxFractionDigits="2" value="${map.mUkupno}" />
+</p>
+<p>Ukupno ugljenih hidrata:
+    <fmt:formatNumber type="number" maxFractionDigits="2" value="${map.uhUkupno}" />
+</p>
 
 <jsp:include page="includes/footer.jsp" />
 </body>
