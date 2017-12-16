@@ -3,9 +3,7 @@
 <html>
 <body>
 
-<h2>Hello world!</h2>
-<a href="${pageContext.request.contextPath}/namirnice/all">Namirnice</a>
-<a href="${pageContext.request.contextPath}/recepti/all">Recepti</a>
+<c:redirect url="/home" />
 
 </body>
 </html>
