@@ -50,4 +50,6 @@
         <property name="password" value="" />
     </bean>
 
+    <mvc:resources location="/css/" mapping="/css/**" />
+
 </beans>

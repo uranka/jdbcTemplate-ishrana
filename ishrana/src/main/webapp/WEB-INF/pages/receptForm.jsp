@@ -5,9 +5,10 @@
 <html>
 <head>
     <title>Recept</title>
+    <link href="<c:url value="/css/main.css"/>" rel="stylesheet" type="text/css" />
 </head>
 <body>
-
+<jsp:include page="includes/header.jsp" />
 <h1>Unesi/izmeni recept</h1>
 
 <c:url var="action" value="/recepti" />
@@ -81,6 +82,6 @@
     </table>
 
 </form:form>
-
+<jsp:include page="includes/footer.jsp" />
 </body>
 </html>

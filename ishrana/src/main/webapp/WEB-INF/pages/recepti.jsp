@@ -3,8 +3,10 @@
 <html>
 <head>
     <title>Recepti</title>
+    <link href="<c:url value="/css/main.css"/>" rel="stylesheet" type="text/css" />
 </head>
 <body>
+<jsp:include page="includes/header.jsp" />
 <h1>Recepti</h1>
 <table border="1" cellpadding="10">
     <tr>
@@ -27,6 +29,6 @@
 </table>
 
 
-
+<jsp:include page="includes/footer.jsp" />
 </body>
 </html>

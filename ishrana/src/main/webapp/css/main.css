@@ -1,0 +1,25 @@
+body {
+    font-family: Futura, Univers, Tahoma, Geneva, sans-serif;
+    background-color: lightyellow;
+}
+
+header h1 {
+    display: inline;
+    letter-spacing: 10px;
+}
+
+header {
+    border-bottom : 2px solid green;
+}
+footer {
+    background-color : black;
+    color: white;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+table, td {
+    padding: 15px;
+}

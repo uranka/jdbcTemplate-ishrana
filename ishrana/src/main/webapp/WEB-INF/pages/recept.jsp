@@ -5,8 +5,10 @@
 <html>
 <head>
     <title>Recept</title>
+    <link href="<c:url value="/css/main.css"/>" rel="stylesheet" type="text/css" />
 </head>
 <body>
+<jsp:include page="includes/header.jsp" />
 <h3>Detaljan prikaz recepta</h3>
 <h1>${recept.naziv}</h1>
 <p>Vreme pripreme: ${recept.vremePripreme} minuta</p>
@@ -34,5 +36,6 @@
 <p>Ukupno masti: ${map.mUkupno}</p>
 <p>Ukupno ugljenih hidrata: ${map.uhUkupno}</p>
 
+<jsp:include page="includes/footer.jsp" />
 </body>
 </html>

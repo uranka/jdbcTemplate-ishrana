@@ -7,8 +7,10 @@
 
 <head>
     <title>Namirnica edit</title>
+    <link href="<c:url value="/css/main.css"/>" rel="stylesheet" type="text/css" />
 </head>
 <body>
+<jsp:include page="includes/header.jsp" />
 <h1>Unesi/izmeni namirnicu</h1>
 
 <c:url var="action" value="/namirnice" />
@@ -65,6 +67,6 @@
         </tr>
     </table>
     </form:form>
-
+<jsp:include page="includes/footer.jsp" />
     </body>
     </html>

@@ -5,8 +5,12 @@
 <html>
 <head>
     <title>Namirnice</title>
+    <link href="<c:url value="/css/main.css"/>" rel="stylesheet" type="text/css" />
 </head>
 <body>
+
+<jsp:include page="includes/header.jsp" />
+
 <h1>Namirnice</h1>
 <table border="1" cellpadding="10">
     <tr>
@@ -37,6 +41,8 @@
     </tr>
 
 </table>
+
+<jsp:include page="includes/footer.jsp" />
 
 </body>
 </html>
