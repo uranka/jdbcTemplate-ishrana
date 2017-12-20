@@ -66,3 +66,29 @@ table, th, td {
 input:focus {
     background-color: #faffa1;
 }
+
+
+#procenti {
+    width:30%;
+    height:15px;
+    /*background-color:yellow;
+    outline: dashed black;*/
+}
+#procenti #p{
+    height:15px;
+    background-color:blue;
+    float:left;
+}
+#procenti #uh{
+    height:15px;
+    background-color:red;
+    float:left;
+}
+#procenti #m{
+    height:15px;
+    background-color:yellow;
+    float:left;
+}
+#procenti:after{
+    content: "proteini:plavo, masti:žuto, ugljeni-hidrati:crveno";
+}
