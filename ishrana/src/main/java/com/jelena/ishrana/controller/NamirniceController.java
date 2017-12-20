@@ -20,7 +20,7 @@ public class NamirniceController {
     private NamirnicaService namirnicaService;
 
     private static final String[] categories = { "voće", "povrće",
-            "mleko i mlečni proizvodi", "meso", "masti"};
+            "mleko i mlečni proizvodi", "meso", "masti", "žitarice"};
 
     @RequestMapping("/all")
     public String vratiNamirnice(Model model) {
