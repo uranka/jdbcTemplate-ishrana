@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -23,9 +24,35 @@ public class NamirniceController {
             "mleko i mlečni proizvodi", "meso", "masti", "žitarice"};
 
     @RequestMapping("/all")
-    public String vratiNamirnice(Model model) {
+    public String vratiNamirnice(@RequestParam(value = "page", required=false) String page,
+                                 @RequestParam(value = "firstRow", required=false) Integer firstRow,
+                                 Model model) {
         System.out.println("inside vratiNamirnice method");
-        List<Namirnica> lst = namirnicaService.findAll();
+        // List<Namirnica> lst = namirnicaService.findAll();
+
+        // pagination
+        int itemsTotal = namirnicaService.count();
+        int itemsOnPage = 8; // number of namirnica on page;
+
+        if (page == null) {
+            firstRow = 0;
+        }
+        else {
+            if (page.equals("next")){
+                if (firstRow + itemsOnPage < itemsTotal) {
+                    firstRow += itemsOnPage;
+                }
+            }
+            if (page.equals("previous")) {
+                if (firstRow - itemsOnPage >= 0) {
+                    firstRow -= itemsOnPage;
+                }
+            }
+        }
+
+        model.addAttribute("firstRow", firstRow);
+        List<Namirnica> lst = namirnicaService.findAll(firstRow, itemsOnPage);
+
         model.addAttribute("namirnice", lst);
         return "namirnice";
     }

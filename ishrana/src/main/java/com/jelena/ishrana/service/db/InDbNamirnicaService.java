@@ -22,6 +22,11 @@ public class InDbNamirnicaService implements NamirnicaService {
     }
 
     @Override
+    public List<Namirnica> findAll(int firstRow, int rowCount) {
+        return namirnicaRepository.findAll(firstRow, rowCount);
+    }
+
+    @Override
     public List<Namirnica> findByCategory(String category) {
         return null;
     }
@@ -39,5 +44,10 @@ public class InDbNamirnicaService implements NamirnicaService {
     @Override
     public void remove(Long id) throws IllegalArgumentException {
         namirnicaRepository.remove(id);
+    }
+
+    @Override
+    public int count() {
+        return namirnicaRepository.count();
     }
 }

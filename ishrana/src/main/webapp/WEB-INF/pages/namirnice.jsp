@@ -42,6 +42,11 @@
 
 </table>
 
+<form action="${pageContext.request.contextPath}/namirnice/all" method="post">
+    <input type="hidden" name="firstRow" value="${firstRow}">
+    <input type="submit" name="page" value="previous">
+    <input type="submit" name="page" value="next">
+</form>
 <jsp:include page="includes/footer.jsp" />
 
 </body>

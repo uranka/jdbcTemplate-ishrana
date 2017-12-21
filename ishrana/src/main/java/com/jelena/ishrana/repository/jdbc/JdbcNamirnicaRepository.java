@@ -37,6 +37,14 @@ public class JdbcNamirnicaRepository implements NamirnicaRepository{
                 new NamirnicaRowMapper());
     }
 
+    @Override
+    public List<Namirnica> findAll(int firstRow, int rowCount) {
+        return jdbcTemplate.query("SELECT * FROM namirnice\n" +
+                        "ORDER BY naziv\n" +
+                        "LIMIT ? OFFSET ?",
+                new Object[] { rowCount, firstRow },
+                new NamirnicaRowMapper());
+    }
 
     @Override
     public List<Namirnica> findByCategory(String category) {
@@ -115,6 +123,11 @@ public class JdbcNamirnicaRepository implements NamirnicaRepository{
         jdbcTemplate
                 .update("delete from  namirnice where namirnica_id = ?", id); // moze da baci DataIntegrityViolationException
 
+    }
+
+    @Override
+    public int count() {
+        return jdbcTemplate.queryForObject("SELECT count(*) FROM namirnice", Integer.class);
     }
 
 

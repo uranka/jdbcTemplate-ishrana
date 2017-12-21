@@ -51,6 +51,11 @@ public class InMemoryNamirnicaService implements NamirnicaService {
     }
 
     @Override
+    public List<Namirnica> findAll(int firstRow, int rowCount) {
+        return null;
+    }
+
+    @Override
     public List<Namirnica> findByCategory(String category) {
 
         List<Namirnica> lst = new ArrayList<>();
@@ -94,5 +99,10 @@ public class InMemoryNamirnicaService implements NamirnicaService {
         if (removed == null) {
             throw new IllegalArgumentException("Removing unexisting namirnica with id=" + id);
         }
+    }
+
+    @Override // neuradjeno
+    public int count() {
+        return 0;
     }
 }
