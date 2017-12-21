@@ -268,6 +268,8 @@ public class JdbcReceptRepository implements ReceptRepository{
         private Double mUkupno = 0.0;
         private Double uhUkupno = 0.0;
 
+        private Double kcalUkupnoKorigovano;
+
         public void processRow(ResultSet rs) throws SQLException {
             kcalUkupno += rs.getDouble("kcal"); // kcal prema kolicini namirnice
             pUkupno += rs.getDouble("p"); // proteini za datu kolicinu namirnice
@@ -281,6 +283,10 @@ public class JdbcReceptRepository implements ReceptRepository{
             map.put("pUkupno", pUkupno);
             map.put("mUkupno", mUkupno);
             map.put("uhUkupno", uhUkupno);
+            kcalUkupnoKorigovano = pUkupno*4.1 + mUkupno*9.3 + uhUkupno*4.1;
+            map.put("pProcenti", pUkupno*4.1*100/kcalUkupnoKorigovano);
+            map.put("mProcenti", mUkupno*9.3*100/kcalUkupnoKorigovano);
+            map.put("uhProcenti", uhUkupno*4.1*100/kcalUkupnoKorigovano);
             return map;
         }
     }

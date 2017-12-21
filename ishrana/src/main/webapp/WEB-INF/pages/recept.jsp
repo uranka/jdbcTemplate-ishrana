@@ -52,22 +52,13 @@
     <div id="uh"></div>
 </div>
 
-
-<%-- Problem: kad se saberu svi procenti kalorija od p, m i uh
-ne dobija se 100 pa sam to malo regulisala mnozenjem sa 95
- Takodje je potrebno imati prave podatke u bazi--%>
-<input type="hidden" id="pProcenat" name="pProcenat" value="${map.pUkupno*4.1*100/map.kcalUkupno}%" />
-<input type="hidden" id="mProcenat" name="mProcenat" value="${map.mUkupno*9.3*100/map.kcalUkupno}%" />
-<input type="hidden" id="uhProcenat" name="uhProcenat" value="${map.uhUkupno*4.1*100/map.kcalUkupno}%" />
-
 <jsp:include page="includes/footer.jsp" />
 
 <script>
-    document.getElementById("p").style.width = document.getElementById("pProcenat").value;
-    document.getElementById("m").style.width = document.getElementById("mProcenat").value;
-    document.getElementById("uh").style.width = document.getElementById("uhProcenat").value;
+    document.getElementById("p").style.width = "${map.pProcenti}%";
+    document.getElementById("m").style.width = "${map.mProcenti}%";
+    document.getElementById("uh").style.width = "${map.uhProcenti}%";
 </script>
-
 
 </body>
 </html>
