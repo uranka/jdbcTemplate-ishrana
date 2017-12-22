@@ -28,7 +28,12 @@ public class InDbNamirnicaService implements NamirnicaService {
 
     @Override
     public List<Namirnica> findByCategory(String category) {
-        return null;
+        return namirnicaRepository.findByCategory(category);
+    }
+
+    @Override
+    public List<Namirnica> findByCategory(String category, int firstRow, int rowCount) {
+        return namirnicaRepository.findByCategory(category, firstRow, rowCount);
     }
 
     @Override
@@ -49,5 +54,10 @@ public class InDbNamirnicaService implements NamirnicaService {
     @Override
     public int count() {
         return namirnicaRepository.count();
+    }
+
+    @Override
+    public int count(String category) {
+        return namirnicaRepository.count(category);
     }
 }

@@ -4,7 +4,7 @@
 
 <html>
 <head>
-    <title>Namirnice</title>
+    <title>Namirnice po kategoriji</title>
     <link href="<c:url value="/css/main.css"/>" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -53,9 +53,8 @@
 
 </table>
 
-<%-- next, previous trenutno rade samo za sve namirnice, za kategorije ne rade!!!! --%>
 
-<c:url var="action" value="/namirnice/all" />
+<c:url var="action" value="/namirnice/${category}" />
 <form action="${action}" method="post">
     <input type="hidden" name="firstRow" value="${firstRow}">
     <button type="submit" name="page" value="previous" class="button">previous</button>

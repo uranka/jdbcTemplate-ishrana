@@ -60,11 +60,38 @@ public class NamirniceController {
     // http://localhost:8080/ishrana/namirnice/voće
     // http://localhost:8080/ishrana/namirnice/mleko i mlečni proizvodi
     @RequestMapping("/{category}")
-    public String vratiNamirnicePoKategoriji(Model model, @PathVariable("category") String category) {
+    public String vratiNamirnicePoKategoriji(
+            @RequestParam(value = "page", required=false) String page,
+            @RequestParam(value = "firstRow", required=false) Integer firstRow,
+            Model model, @PathVariable("category") String category) {
         System.out.println("inside vratiNamirnicePoKategoriji method");
-        List<Namirnica> lst = namirnicaService.findByCategory(category);
+       // List<Namirnica> lst = namirnicaService.findByCategory(category);
+       // model.addAttribute("firstRow", 0); // saljem sve namirnice odredjene kategorije, nema paginacije
+
+        // pagination
+        int itemsTotal = namirnicaService.count(category);
+        int itemsOnPage = 3; // number of namirnica on page;
+
+        if (page == null) {
+            firstRow = 0;
+        }
+        else {
+            if (page.equals("next")){
+                if (firstRow + itemsOnPage < itemsTotal) {
+                    firstRow += itemsOnPage;
+                }
+            }
+            if (page.equals("previous")) {
+                if (firstRow - itemsOnPage >= 0) {
+                    firstRow -= itemsOnPage;
+                }
+            }
+        }
+
+        model.addAttribute("firstRow", firstRow);
+        List<Namirnica> lst = namirnicaService.findByCategory(category, firstRow, itemsOnPage);
         model.addAttribute("namirnice", lst);
-        return "namirnice";
+        return "namirniceCat";
     }
 
     @RequestMapping("/edit/{namirnica_id}")

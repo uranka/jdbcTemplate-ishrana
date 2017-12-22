@@ -53,6 +53,18 @@ public class JdbcNamirnicaRepository implements NamirnicaRepository{
                 new NamirnicaRowMapper());
     }
 
+    //neproverena metoda, potrebna za paginaciju kategorije nam.
+    @Override
+    public List<Namirnica> findByCategory(String category, int firstRow, int rowCount) {
+        return jdbcTemplate.query("SELECT * \n" +
+                        "FROM namirnice\n" +
+                        "WHERE kategorija = ?\n" +
+                        "ORDER BY naziv\n" +
+                        "LIMIT ? OFFSET ?",
+                new Object[] { category, rowCount, firstRow },
+                new NamirnicaRowMapper());
+    }
+
     // vraca null ako nema namirnice sa datim id u bazi
     // ako pronadje vise od jedne namirnice sa datim id baca izuzetak IncorrectResultSizeDataAccessException
     // hvatam ga u gde
@@ -128,6 +140,15 @@ public class JdbcNamirnicaRepository implements NamirnicaRepository{
     @Override
     public int count() {
         return jdbcTemplate.queryForObject("SELECT count(*) FROM namirnice", Integer.class);
+    }
+
+    @Override
+    public int count(String category) {
+        return jdbcTemplate.queryForObject("SELECT count(*)\n" +
+                "FROM namirnice\n" +
+                "WHERE kategorija = ?",
+                new Object[] { category },
+                Integer.class);
     }
 
 

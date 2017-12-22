@@ -46,6 +46,11 @@ nav ul li a:active {
     background-color: red;
 }
 
+/* za linkove ka kategorijama namirnicama, vidi kako ovo stoji u odnosu sa svim linkovima u projektu*/
+ul li {
+    list-style-type: none;/*skida kruzic ispred nabrajanja */
+    display: inline;/*omogucava horizontalno poredjane stavke */
+}
 
 footer {
     background-color : black;

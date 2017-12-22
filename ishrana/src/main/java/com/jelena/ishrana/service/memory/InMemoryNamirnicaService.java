@@ -73,6 +73,11 @@ public class InMemoryNamirnicaService implements NamirnicaService {
     }
 
     @Override
+    public List<Namirnica> findByCategory(String category, int firstRow, int rowCount) {
+        return null;
+    }
+
+    @Override
     public Namirnica findOne(Long id) {
         return map.get(id);
     } // sta ako nema trazene namirnice?
@@ -103,6 +108,11 @@ public class InMemoryNamirnicaService implements NamirnicaService {
 
     @Override // neuradjeno
     public int count() {
+        return 0;
+    }
+
+    @Override
+    public int count(String category) {
         return 0;
     }
 }
