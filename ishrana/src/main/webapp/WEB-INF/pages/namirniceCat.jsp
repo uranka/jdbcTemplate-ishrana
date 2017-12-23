@@ -14,13 +14,13 @@
 <h1>Namirnice</h1>
 
 <ul>
-    <li><a href="${pageContext.request.contextPath}/namirnice/all">sve</a></li>
-    <li><a href="${pageContext.request.contextPath}/namirnice/voće">voće</a></li>
-    <li><a href="${pageContext.request.contextPath}/namirnice/povrće">povrće</a></li>
-    <li><a href="${pageContext.request.contextPath}/namirnice/mleko i mlečni proizvodi">mlečno</a></li>
-    <li><a href="${pageContext.request.contextPath}/namirnice/meso">meso</a></li>
-    <li><a href="${pageContext.request.contextPath}/namirnice/masti">masti</a></li>
-    <li><a href="${pageContext.request.contextPath}/namirnice/žitarice">žitarice</a></li>
+    <li><a href="${pageContext.request.contextPath}/namirnice/all" class="button-cat">sve</a></li>
+    <li><a href="${pageContext.request.contextPath}/namirnice/voće" class="button-cat">voće</a></li>
+    <li><a href="${pageContext.request.contextPath}/namirnice/povrće" class="button-cat">povrće</a></li>
+    <li><a href="${pageContext.request.contextPath}/namirnice/mleko i mlečni proizvodi" class="button-cat">mlečno</a></li>
+    <li><a href="${pageContext.request.contextPath}/namirnice/meso" class="button-cat">meso</a></li>
+    <li><a href="${pageContext.request.contextPath}/namirnice/masti" class="button-cat">masti</a></li>
+    <li><a href="${pageContext.request.contextPath}/namirnice/žitarice" class="button-cat">žitarice</a></li>
 </ul>
 
 <table border="1">
@@ -57,8 +57,8 @@
 <c:url var="action" value="/namirnice/${category}" />
 <form action="${action}" method="post">
     <input type="hidden" name="firstRow" value="${firstRow}">
-    <button type="submit" name="page" value="previous" class="button">previous</button>
-    <button type="submit" name="page" value="next" class="button">next</button>
+    <button type="submit" name="page" value="previous" class="button">&laquo;</button>
+    <button type="submit" name="page" value="next" class="button">&raquo;</button>
 </form>
 <jsp:include page="includes/footer.jsp" />
 
