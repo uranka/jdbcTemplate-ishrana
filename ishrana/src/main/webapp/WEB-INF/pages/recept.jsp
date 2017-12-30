@@ -12,6 +12,9 @@
 <jsp:include page="includes/header.jsp" />
 <h3>Detaljan prikaz recepta</h3>
 <h1>${recept.naziv}</h1>
+
+<img src="<c:url value='/recepti/photo/${recept.recept_id}' />" />
+
 <p>Vreme pripreme: ${recept.vremePripreme} minuta</p>
 <p>Vreme kuvanja: ${recept.vremeKuvanja} minuta</p>
 

@@ -12,7 +12,7 @@
 <h1>Unesi/izmeni recept</h1>
 
 <c:url var="action" value="/recepti" />
-<form:form modelAttribute="recept" method="POST"  action="${action}">
+<form:form modelAttribute="recept" method="POST"  action="${action}" enctype="multipart/form-data">
     <table>
         <tr>
             <td><form:label path="naziv">Naziv</form:label></td>
@@ -30,6 +30,13 @@
             <td><form:label path="vremeKuvanja">Vreme kuvanja (min):</form:label></td>
             <td><form:input type="number" path="vremeKuvanja" min="0.0"/></td>
         </tr>
+
+        <tr>
+            <td><form:label path="slika">Slika:</form:label></td>
+            <td><form:input type="file" path="slika" name="slika"/></td>
+        </tr>
+
+
         <tr>
             <td>NAMIRNICA</td>
             <td>KOLIČINA (g)</td>

@@ -1,5 +1,7 @@
 package com.jelena.ishrana.model;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +14,10 @@ public class Recept {
 
     // TODO
 // private String uputstvo;
-// slika recepta
+    private byte[] slika;
+
+    //private MultipartFile slika; //A representation of an uploaded file received in a multipart request
+
 
     private List<Namirnica> listaNamirnica;
     private List<Integer> listaKolicina;
@@ -21,6 +26,7 @@ public class Recept {
         // da mi ove liste ne budu null, da ih imam, da budu prazne tj. velicine 0
         listaNamirnica = new ArrayList<>();
         listaKolicina = new ArrayList<>();
+        slika = null;
     }
 
     public Long getRecept_id() {
@@ -52,7 +58,23 @@ public class Recept {
         this.vremeKuvanja = vremeKuvanja;
     }
 
+    public byte[] getSlika() {
+        return slika;
+    }
 
+    public void setSlika(byte[] slika) {
+        this.slika = slika;
+    }
+
+    /*
+    public MultipartFile getSlika() {
+        return slika;
+    }
+
+    public void setSlika(MultipartFile slika) {
+        this.slika = slika;
+    }
+    */
 
     public List<Namirnica> getListaNamirnica() {
         return listaNamirnica;

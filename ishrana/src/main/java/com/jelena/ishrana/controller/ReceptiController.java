@@ -7,18 +7,28 @@ import com.jelena.ishrana.service.ReceptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.ByteArrayMultipartFileEditor;
+
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.http.HttpServletResponse;
 
 
 @Controller
 @RequestMapping("/recepti")
+@MultipartConfig
 public class ReceptiController {
     private static final Logger LOG = LoggerFactory.getLogger(ReceptiController.class);
 
@@ -27,6 +37,11 @@ public class ReceptiController {
 
     @Autowired
     private NamirnicaService namirnicaService;
+
+    @InitBinder
+    public void initialiseBinder (WebDataBinder binder){
+        binder.registerCustomEditor(byte[].class, "slika", new ByteArrayMultipartFileEditor());
+    }
 
     @RequestMapping("/all")
     public String vratiRecepte(Model model) {
@@ -54,7 +69,7 @@ public class ReceptiController {
     }
 
     @RequestMapping(params="save_button", method = RequestMethod.POST)
-    public String save(Recept recept) {
+    public String save(Recept recept) throws IOException {
         LOG.info("saving recept");
         receptService.save(recept);
         return "redirect:recepti/all";
@@ -184,6 +199,22 @@ public class ReceptiController {
         }
         System.out.println("inRecept " + inRecept);
         return inRecept;
+    }
+
+
+    @RequestMapping("/photo/{recept_id}")
+    public void showReceptImage(@PathVariable("recept_id") Long recept_id, HttpServletResponse response){
+        System.out.println("prikazujem sliku recepta");
+        Recept recept = receptService.findOne(recept_id);
+
+        int length = (int)recept.getSlika().length;
+        response.setContentType("image/jpg");
+        response.setContentLength(length);
+        try {
+            response.getOutputStream().write(recept.getSlika());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -70,6 +70,10 @@
         </property>
     </bean>
 
+
+    <bean id="multipartResolver"  class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+
+
     <mvc:resources location="/css/" mapping="/css/**" />
     <mvc:view-controller path="/home" view-name="home" />
 

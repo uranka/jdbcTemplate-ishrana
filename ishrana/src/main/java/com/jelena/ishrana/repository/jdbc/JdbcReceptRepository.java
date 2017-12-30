@@ -1,6 +1,7 @@
 package com.jelena.ishrana.repository.jdbc;
 
 
+import com.jelena.ishrana.exceptions.NoImageReaderException;
 import com.jelena.ishrana.model.Namirnica;
 import com.jelena.ishrana.model.Recept;
 import com.jelena.ishrana.repository.ReceptRepository;
@@ -9,11 +10,20 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
 import org.springframework.jdbc.core.RowCallbackHandler;
+import org.springframework.jdbc.core.support.SqlLobValue;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.support.lob.DefaultLobHandler;
+import org.springframework.jdbc.support.lob.LobHandler;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import javax.sql.DataSource;
+import java.io.*;
+import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -34,7 +44,7 @@ public class JdbcReceptRepository implements ReceptRepository{
     public List<Recept> findAll() {
         ReceptRowCallbackHandler receptRowCallbackHandler =
                 new ReceptRowCallbackHandler();
-        jdbcTemplate.query("SELECT r.naziv, r.recept_id, r.vreme_pripreme, r.vreme_kuvanja, rn.namirnica_id, rn.kolicina_namirnice,\n" +
+        jdbcTemplate.query("SELECT r.naziv, r.recept_id, r.vreme_pripreme, r.vreme_kuvanja, r.slika, rn.namirnica_id, rn.kolicina_namirnice,\n" +
                         "n.naziv, n.kcal, n.p, n.m, n.uh, n.kategorija\n" +
                         "FROM recepti r LEFT OUTER JOIN recepti_namirnice rn\n" +
                         "ON r.recept_id = rn.recept_id\n" +
@@ -50,7 +60,7 @@ public class JdbcReceptRepository implements ReceptRepository{
     public Recept findOne(Long id) {
         ReceptRowCallbackHandler receptRowCallbackHandler =
                 new ReceptRowCallbackHandler();
-        jdbcTemplate.query("SELECT r.naziv, r.recept_id, r.vreme_pripreme, r.vreme_kuvanja, rn.namirnica_id, rn.kolicina_namirnice,\n" +
+        jdbcTemplate.query("SELECT r.naziv, r.recept_id, r.vreme_pripreme, r.vreme_kuvanja, r.slika, rn.namirnica_id, rn.kolicina_namirnice,\n" +
                         "n.naziv, n.kcal, n.p, n.m, n.uh, n.kategorija\n" +
                         "FROM recepti r LEFT OUTER JOIN recepti_namirnice rn\n" +
                         "ON r.recept_id = rn.recept_id\n" +
@@ -64,45 +74,80 @@ public class JdbcReceptRepository implements ReceptRepository{
 
     @Override
     public Recept save(Recept recept) {
+        System.out.println("inside save method JdbcReceptRepository class");
+
+        // ako imamo jpg sliku snimiti je u bazu, a ako nemamo snimiti null u bazu
+
+        boolean isJpeg = false;
+        if (recept.getSlika() != null) { // imam neki niz bajtova za sliku
+
+            // utvrdjivanje da li je fajl slika tipa jpg
+            try {
+                InputStream fileContent = new ByteArrayInputStream(recept.getSlika());
+                isJpeg = isImageFormatJpeg(fileContent); // isImageFormatJpeg pokvari input stream
+                //fileContent = new ByteArrayInputStream(recept.getSlika());
+                System.out.println("ending try jpeg");
+            } catch (NoImageReaderException e) {
+                System.out.println(e.getMessage());
+                System.out.println("ending no image reader catch jpeg");
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Object s = null;
+        if (isJpeg) {
+            LobHandler lobHandler = new DefaultLobHandler();
+            s = new SqlLobValue(recept.getSlika(), lobHandler);
+        }
+
+
         if (recept.getRecept_id() != null) {
-            // Update polja naziv, vreme pripreme, vreme kuvanja (tabela recepti):
-            PreparedStatementCreatorFactory pscFactory = new PreparedStatementCreatorFactory(
-                    "update recepti \n" +
-                            "set naziv = ?, vreme_pripreme = ?, vreme_kuvanja = ?\n" +
-                            "where recept_id = ?",
-                    new int[] {Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.BIGINT});
 
-            //KeyHolder holder = new GeneratedKeyHolder();
-            PreparedStatementCreator psc = pscFactory.newPreparedStatementCreator(
-                    new Object[] {recept.getNaziv(), recept.getVremePripreme(),
-                    recept.getVremeKuvanja(), recept.getRecept_id()});
+                System.out.println("updejtujem recept");
 
-            jdbcTemplate.update(psc/*, holder*/);
+                // Update polja naziv, vreme pripreme, vreme kuvanja i slike(tabela recepti):
+                PreparedStatementCreatorFactory pscFactory = new PreparedStatementCreatorFactory(
+                        "UPDATE recepti \n" +
+                                "SET naziv = ?, vreme_pripreme = ?, vreme_kuvanja = ?, slika = ? \n" +
+                                "WHERE recept_id = ?",
+                        new int[]{Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.BLOB, Types.BIGINT});
 
-            //Obrisati sve postojece namirnice vezane za recept, pa insertovati nove iz argumenta recept
-            updateNamirnice(recept);
+
+                PreparedStatementCreator psc = pscFactory.newPreparedStatementCreator(
+                            new Object[]{recept.getNaziv(), recept.getVremePripreme(),
+                                    recept.getVremeKuvanja(), s,
+                                    recept.getRecept_id()});
+
+                jdbcTemplate.update(psc);
+
+                //Obrisati sve postojece namirnice vezane za recept, pa insertovati nove iz argumenta recept
+                updateNamirnice(recept);
         }
         else {
-            // snimanje novog recepta
-            // snimanje naziva, vremena pripreme, vremena kuvanja
-            PreparedStatementCreatorFactory pscFactory2 = new PreparedStatementCreatorFactory(
-                    "INSERT INTO recepti (naziv, vreme_pripreme, vreme_kuvanja)\n" +
-                            "VALUES (?, ?, ?)",
-                    new int[] {Types.VARCHAR, Types.INTEGER, Types.INTEGER});
-            pscFactory2.setReturnGeneratedKeys(true);
+                // snimanje novog recepta
+                System.out.println("snimam novi recept");
 
-            KeyHolder holder = new GeneratedKeyHolder();
-            PreparedStatementCreator psc2 = pscFactory2.newPreparedStatementCreator(
-                    new Object[] {recept.getNaziv(), recept.getVremePripreme(), recept.getVremeKuvanja()});
+                // snimanje naziva, vremena pripreme, vremena kuvanja
+                PreparedStatementCreatorFactory pscFactory2 = new PreparedStatementCreatorFactory(
+                        "INSERT INTO recepti (naziv, vreme_pripreme, vreme_kuvanja, slika)\n" +
+                                "VALUES (?, ?, ?, ?)",
+                        new int[]{Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.BLOB});
+                pscFactory2.setReturnGeneratedKeys(true);
 
-            jdbcTemplate.update(psc2, holder);
+                KeyHolder holder = new GeneratedKeyHolder();
+                PreparedStatementCreator psc2 = pscFactory2.newPreparedStatementCreator(
+                        new Object[]{recept.getNaziv(), recept.getVremePripreme(), recept.getVremeKuvanja(), s});
 
-            // snimi recept_id u recept
-            recept.setRecept_id(holder.getKey().longValue());
+                jdbcTemplate.update(psc2, holder);
 
-            // snimanje lista namirnica i njihovih kolicina
-            // pozvacu metodu updateNamirnice, jest da ce dzabe da brise
-            updateNamirnice(recept);
+                // snimi recept_id u recept
+                recept.setRecept_id(holder.getKey().longValue());
+
+                // snimanje lista namirnica i njihovih kolicina
+                // pozvacu metodu updateNamirnice, jest da ce dzabe da brise
+                updateNamirnice(recept);
         }
 
         // metoda save treba da vrati snimljeni recept
@@ -131,6 +176,25 @@ public class JdbcReceptRepository implements ReceptRepository{
             jdbcTemplate.update(psc, holder);
         }
     }
+
+
+    private boolean isImageFormatJpeg(InputStream is) throws IOException, NoImageReaderException  {
+        ImageInputStream iis = ImageIO.createImageInputStream(is);
+        // get all currently registered readers that recognize the image format
+        Iterator<ImageReader> iter = ImageIO.getImageReaders(iis);
+        if (!iter.hasNext()) {
+            throw new NoImageReaderException ("No readers found says isImageFormatJpeg function!");
+        }
+
+        System.out.println("Readers found");
+        // get the first reader
+        ImageReader reader = iter.next();
+        String format = reader.getFormatName();
+        //iis.close();
+        return format.equalsIgnoreCase("JPEG")? true : false;
+    }
+
+
 
     @Override
     public void remove(Long id) throws IllegalArgumentException {
@@ -205,6 +269,15 @@ public class JdbcReceptRepository implements ReceptRepository{
                 currentRecept.setNaziv(rs.getString("r.naziv"));
                 currentRecept.setVremePripreme(rs.getInt("r.vreme_pripreme"));
                 currentRecept.setVremeKuvanja(rs.getInt("r.vreme_kuvanja"));
+
+                Blob blob = rs.getBlob("r.slika");
+                if (blob != null) {
+                    int blobLength = (int) blob.length();
+                    byte[] blobAsBytes = blob.getBytes(1, blobLength);
+                    currentRecept.setSlika(blobAsBytes);
+                }
+
+
                 // dodaj recept u listu recepata
                 result.add(currentRecept);
                 brojacRecepta++;
