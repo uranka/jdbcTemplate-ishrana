@@ -142,5 +142,15 @@ public class InMemoryReceptService implements ReceptService {
         return null;
     }
 
+    @Override
+    public void removeSlika(Long recept_id) {
+
+    }
+
+    @Override
+    public void addSlika(Long recept_id, byte[] slika) {
+
+    }
+
 
 }

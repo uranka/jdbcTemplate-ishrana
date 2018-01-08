@@ -71,7 +71,10 @@
     </bean>
 
 
-    <bean id="multipartResolver"  class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+    <bean id="multipartResolver"  class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- the maximum file size in bytes -->
+        <property name="maxUploadSize" value="102400"/>
+    </bean>
 
 
     <mvc:resources location="/css/" mapping="/css/**" />

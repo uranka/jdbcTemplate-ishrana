@@ -15,4 +15,6 @@ public interface ReceptRepository {
     void removeNamirnica(Recept recept, Long namirnica_id) throws IllegalArgumentException;
     void addNamirnica(Recept recept, Namirnica namirnica, Integer kolicina);
     Map<String, Double> analizaRecepta(Long id);
+    void removeSlika(Long recept_id);
+    void addSlika(Long recept_id, byte[] slika);
 }

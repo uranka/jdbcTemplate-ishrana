@@ -1,29 +1,28 @@
 package com.jelena.ishrana.controller;
 
+import com.jelena.ishrana.exceptions.NoImageReaderException;
 import com.jelena.ishrana.model.Namirnica;
 import com.jelena.ishrana.model.Recept;
 import com.jelena.ishrana.service.NamirnicaService;
 import com.jelena.ishrana.service.ReceptService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.ByteArrayMultipartFileEditor;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 
 
 @Controller
@@ -31,6 +30,9 @@ import javax.servlet.http.HttpServletResponse;
 @MultipartConfig
 public class ReceptiController {
     private static final Logger LOG = LoggerFactory.getLogger(ReceptiController.class);
+
+    private byte[] tempSlika = new byte[102400];
+    // proveri koliku sliku zelis, imas i u binu multipartResolver ogranicenje max upload size
 
     @Autowired
     private ReceptService receptService;
@@ -40,7 +42,7 @@ public class ReceptiController {
 
     @InitBinder
     public void initialiseBinder (WebDataBinder binder){
-        binder.registerCustomEditor(byte[].class, "slika", new ByteArrayMultipartFileEditor());
+        binder.registerCustomEditor(byte[].class,"slika", new ByteArrayMultipartFileEditor());
     }
 
     @RequestMapping("/all")
@@ -60,18 +62,31 @@ public class ReceptiController {
         Recept recept = receptService.findOne(recept_id);
         System.out.println("iz edita " + recept);
 
+        if (recept.getSlika() != null) {
+            tempSlika = Arrays.copyOf(recept.getSlika(), recept.getSlika().length);
+        }
+
         List<Namirnica> namirniceSelect = findNotInRecept(recept);
         model.addAttribute("namirniceSelect", namirniceSelect);
         System.out.println("namirniceSelect" + namirniceSelect);
 
         model.addAttribute("recept", recept);
+
+        if (recept.getSlika() != null) {
+            model.addAttribute("msgSlikaExists", "ima slike");
+        }
+
         return "receptForm";
     }
 
     @RequestMapping(params="save_button", method = RequestMethod.POST)
     public String save(Recept recept) throws IOException {
         LOG.info("saving recept");
+
+        recept.setSlika(tempSlika);
         receptService.save(recept);
+        tempSlika = null;
+
         return "redirect:recepti/all";
     }
 
@@ -86,16 +101,18 @@ public class ReceptiController {
     public String dodajNoviRecept(Model model) {
         LOG.info("start of adding new recept");
         Recept recept = new Recept();
-        //recept.setRecept_id(0L);
 
         List<Namirnica> namirniceSelect = namirnicaService.findAll(); // nov je recept pa sve namirnice nudim za izbor
         model.addAttribute("namirniceSelect", namirniceSelect);
         System.out.println("namirniceSelect" + namirniceSelect);
 
-
-
         LOG.info("sends new recept to form with data: " + recept);
         model.addAttribute("recept", recept);
+
+        if (recept.getSlika() != null) {
+            model.addAttribute("msgSlikaExists", "ima slike");
+        }
+
         return "receptForm";
     }
 
@@ -122,7 +139,8 @@ public class ReceptiController {
     // parameter removeNamirnica must be present in post request
     @RequestMapping(params="removeNamirnica", method = RequestMethod.POST)
     public String removeNamirnica(Recept recept,
-                                  @RequestParam(value = "removeNamirnica") Long namirnica_id, Model model) {
+                                  @RequestParam(value = "removeNamirnica") Long namirnica_id, Model model,
+                                  @RequestParam(value="msgSlikaExists") String msgSlikaExists) {
         System.out.println("inside removeNamirnica method klase ReceptiController, namirnica_id: " + namirnica_id);
         System.out.println(recept);
 
@@ -136,6 +154,7 @@ public class ReceptiController {
         model.addAttribute("namirniceSelect", namirniceSelect);
 
         model.addAttribute("recept", recept);
+        model.addAttribute("msgSlikaExists", msgSlikaExists); // samo prenosim msgSlikaExists
         return "receptForm";
     }
 
@@ -143,7 +162,8 @@ public class ReceptiController {
     @RequestMapping(params = { "addNamirnica" },  method = RequestMethod.POST)
     public String addNamirnica(Recept recept,
                                @RequestParam(value = "nid") Namirnica namirnica, // calls StringToNamirnicaConverter
-                               @RequestParam(value = "kolicina") Integer kolicina, Model model){
+                               @RequestParam(value = "kolicina") Integer kolicina, Model model,
+                               @RequestParam(value="msgSlikaExists") String msgSlikaExists){
         System.out.println("inside addNamirnica method klase ReceptiController");
         System.out.println(recept);
 
@@ -159,6 +179,7 @@ public class ReceptiController {
         System.out.println("namirniceSelect" + namirniceSelect);
 
         model.addAttribute("recept", recept);
+        model.addAttribute("msgSlikaExists", msgSlikaExists); // samo prenosim msgSlikaExists
         return "receptForm";
     }
 
@@ -207,7 +228,7 @@ public class ReceptiController {
         System.out.println("prikazujem sliku recepta");
         Recept recept = receptService.findOne(recept_id);
 
-        int length = (int)recept.getSlika().length;
+        int length = recept.getSlika().length;
         response.setContentType("image/jpg");
         response.setContentLength(length);
         try {
@@ -215,6 +236,99 @@ public class ReceptiController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @RequestMapping("/tempSlika")
+    public void showSlika(HttpServletResponse response){
+
+        int length = tempSlika.length;
+        response.setContentType("image/jpg");
+        response.setContentLength(length);
+        try {
+            response.getOutputStream().write(tempSlika);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    // parameter removeNamirnica must be present in post request
+    @RequestMapping(params="removeSlika", method = RequestMethod.POST)
+    public String removeSlika( Recept recept, @RequestParam(value = "removeSlika") Long recept_id, Model model) {
+        System.out.println("inside removeSlika method klase ReceptiController, recept_id: " + recept_id);
+
+        //receptService.removeSlika(recept_id);
+        tempSlika = null;
+
+        List<Namirnica> namirniceSelect = findNotInRecept(recept);
+        model.addAttribute("namirniceSelect", namirniceSelect);
+
+        model.addAttribute("recept", recept);
+       /* model.addAttribute("msgSlikaRemoved", "Slika je obrisana");*/
+        return "receptForm";
+    }
+
+    @RequestMapping(params="addSlika", method = RequestMethod.POST)
+    public String addSlika(Recept recept, @RequestParam(value = "addSlika") Long recept_id, Model model) {
+        System.out.println("inside addSlika method klase ReceptiController, recept_id: " + recept_id);
+
+        //receptService.addSlika(recept_id, recept.getSlika()); // ako je recept_id nepostojeci jer
+        // je potpuno nov i nije jos snimljen u bazu i nema validnog recept_id
+        System.out.println("kontrola recept_id " + recept_id);
+        if (isJpeg(recept.getSlika())) {
+            tempSlika = Arrays.copyOf(recept.getSlika(), recept.getSlika().length);
+            model.addAttribute("msgSlikaExists", "ima slike");
+        }
+        else{
+            model.addAttribute("msgSlikaNotExist", "Fajl mora biti slika tipa jpeg!");
+        }
+
+        List<Namirnica> namirniceSelect = findNotInRecept(recept);
+        model.addAttribute("namirniceSelect", namirniceSelect);
+
+        model.addAttribute("recept", recept);
+        return "receptForm";
+    }
+
+
+    // ispitivanje da li je fajl slika tipa jpeg staviti u kontroler
+    // ako fajl nije slika tipa jpeg slika se ni ne salje na snimanje
+    // TODO provere na duzinu fajla, a i nemam nikakav validation podataka u formama
+    private boolean isImageFormatJpeg(InputStream is) throws IOException, NoImageReaderException {
+        ImageInputStream iis = ImageIO.createImageInputStream(is);
+        // get all currently registered readers that recognize the image format
+        Iterator<ImageReader> iter = ImageIO.getImageReaders(iis);
+        if (!iter.hasNext()) {
+            throw new NoImageReaderException ("No readers found says isImageFormatJpeg function!");
+        }
+
+        System.out.println("Readers found");
+        // get the first reader
+        ImageReader reader = iter.next();
+        String format = reader.getFormatName();
+        //iis.close();
+        return format.equalsIgnoreCase("JPEG")? true : false;
+    }
+
+    private boolean isJpeg(byte[] slika) {
+        boolean isJpeg = false;
+        if (slika != null) { // imam neki niz bajtova za sliku
+
+            // utvrdjivanje da li je fajl slika tipa jpg
+            try {
+                InputStream fileContent = new ByteArrayInputStream(slika);
+                isJpeg = isImageFormatJpeg(fileContent); // isImageFormatJpeg pokvari input stream
+                //fileContent = new ByteArrayInputStream(recept.getSlika());
+                System.out.println("ending try jpeg");
+            } catch (NoImageReaderException e) {
+                System.out.println(e.getMessage());
+                System.out.println("ending no image reader catch jpeg");
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return isJpeg;
     }
 
 }

@@ -13,7 +13,9 @@
 <h3>Detaljan prikaz recepta</h3>
 <h1>${recept.naziv}</h1>
 
-<img src="<c:url value='/recepti/photo/${recept.recept_id}' />" />
+<c:if test="${fn:length(recept.slika) gt 0}">
+    <img src="<c:url value='/recepti/photo/${recept.recept_id}' />" />
+</c:if>
 
 <p>Vreme pripreme: ${recept.vremePripreme} minuta</p>
 <p>Vreme kuvanja: ${recept.vremeKuvanja} minuta</p>

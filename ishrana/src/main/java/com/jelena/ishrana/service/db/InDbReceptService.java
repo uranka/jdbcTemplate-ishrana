@@ -52,4 +52,14 @@ public class InDbReceptService  implements ReceptService{
     public Map<String, Double> analizaRecepta(Long id) {
         return receptRepository.analizaRecepta(id);
     }
+
+    @Override
+    public void removeSlika(Long recept_id){
+        receptRepository.removeSlika(recept_id);
+    }
+
+    @Override
+    public void addSlika(Long recept_id, byte[] slika) {
+        receptRepository.addSlika(recept_id, slika);
+    }
 }

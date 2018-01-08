@@ -31,11 +31,6 @@
             <td><form:input type="number" path="vremeKuvanja" min="0.0"/></td>
         </tr>
 
-        <tr>
-            <td><form:label path="slika">Slika:</form:label></td>
-            <td><form:input type="file" path="slika" name="slika"/></td>
-        </tr>
-
 
         <tr>
             <td>NAMIRNICA</td>
@@ -77,6 +72,40 @@
             </td>
         </tr>
         </c:if>
+
+
+        <tr>
+                <%--<td>msgSlikaRemoved: ${msgSlikaRemoved}</td>
+                   <input type="hidden" name="msgSlikaRemoved" value="${msgSlikaRemoved}">--%>
+            <td>msgSlikaExists: ${msgSlikaExists}</td>
+            <td>${msgSlikaNotExist}</td>
+            <input type="hidden" name="msgSlikaExists" value="${msgSlikaExists}">
+        </tr>
+
+
+        <c:choose>
+            <%-- <c:when test="${fn:length(recept.slika) gt 0 or not empty msgSlikaExists}"> --%>
+            <c:when test="${not empty msgSlikaExists}">
+                <tr>
+                    <td>
+                        <img src="<c:url value='/recepti/tempSlika' />" height="70"/>
+                    </td>
+                    <td>
+                        <button type="submit" name="removeSlika"
+                                value="${recept.recept_id}">obriši sliku</button>
+                    </td>
+                </tr>
+            </c:when>
+            <c:otherwise>
+                <tr>
+                    <td><form:label path="slika">Slika:</form:label></td>
+                    <td><form:input type="file" path="slika" name="slika" /></td>
+                    <td><button type="submit" name="addSlika"
+                                value="${recept.recept_id}">Snimi sliku</button></td>
+                </tr>
+            </c:otherwise>
+        </c:choose>
+
 
         <tr>
             <td>

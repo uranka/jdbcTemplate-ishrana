@@ -75,52 +75,73 @@ public class JdbcReceptRepository implements ReceptRepository{
     @Override
     public Recept save(Recept recept) {
         System.out.println("inside save method JdbcReceptRepository class");
-
-        // ako imamo jpg sliku snimiti je u bazu, a ako nemamo snimiti null u bazu
-
-        boolean isJpeg = false;
-        if (recept.getSlika() != null) { // imam neki niz bajtova za sliku
-
-            // utvrdjivanje da li je fajl slika tipa jpg
-            try {
-                InputStream fileContent = new ByteArrayInputStream(recept.getSlika());
-                isJpeg = isImageFormatJpeg(fileContent); // isImageFormatJpeg pokvari input stream
-                //fileContent = new ByteArrayInputStream(recept.getSlika());
-                System.out.println("ending try jpeg");
-            } catch (NoImageReaderException e) {
-                System.out.println(e.getMessage());
-                System.out.println("ending no image reader catch jpeg");
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
+/*
         Object s = null;
-        if (isJpeg) {
+        if (isJpeg(recept.getSlika())) {
             LobHandler lobHandler = new DefaultLobHandler();
             s = new SqlLobValue(recept.getSlika(), lobHandler);
         }
-
+*/
+        LobHandler lobHandler = new DefaultLobHandler();
+        Object s = new SqlLobValue(recept.getSlika(), lobHandler);
 
         if (recept.getRecept_id() != null) {
 
-                System.out.println("updejtujem recept");
+            System.out.println("updejtujem recept s=" + s);
 
-                // Update polja naziv, vreme pripreme, vreme kuvanja i slike(tabela recepti):
-                PreparedStatementCreatorFactory pscFactory = new PreparedStatementCreatorFactory(
-                        "UPDATE recepti \n" +
-                                "SET naziv = ?, vreme_pripreme = ?, vreme_kuvanja = ?, slika = ? \n" +
-                                "WHERE recept_id = ?",
-                        new int[]{Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.BLOB, Types.BIGINT});
+            // Update polja naziv, vreme pripreme, vreme kuvanja i slike(tabela recepti):
+            PreparedStatementCreatorFactory pscFactory = new PreparedStatementCreatorFactory(
+                    "UPDATE recepti \n" +
+                            "SET naziv = ?, vreme_pripreme = ?, vreme_kuvanja = ?, slika = ? \n" +
+                            "WHERE recept_id = ?",
+                    new int[]{Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.BLOB, Types.BIGINT});
 
 
-                PreparedStatementCreator psc = pscFactory.newPreparedStatementCreator(
+            PreparedStatementCreator psc = pscFactory.newPreparedStatementCreator(
+                    new Object[]{recept.getNaziv(), recept.getVremePripreme(),
+                            recept.getVremeKuvanja(), s,
+                            recept.getRecept_id()});
+
+            jdbcTemplate.update(psc);
+/*
+
+                if (s == null) {
+                    // Update polja naziv, vreme pripreme, vreme kuvanja , ali ne i update slike -BUDZENJE
+                    // jer ja ne mogu iz forme da bajndujem sliku koja nije dosla preko upload-a
+                    // i to sto nema bajndovane slike ne mora da znaci da nema slike,
+                    // nego da je ima i da tu staru treba ostaviti
+                    PreparedStatementCreatorFactory pscFactory = new PreparedStatementCreatorFactory(
+                            "UPDATE recepti \n" +
+                                    "SET naziv = ?, vreme_pripreme = ?, vreme_kuvanja = ? \n" +
+                                    "WHERE recept_id = ?",
+                            new int[]{Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.BIGINT});
+
+
+                    PreparedStatementCreator psc = pscFactory.newPreparedStatementCreator(
+                            new Object[]{recept.getNaziv(), recept.getVremePripreme(),
+                                    recept.getVremeKuvanja(),
+                                    recept.getRecept_id()});
+
+                    jdbcTemplate.update(psc);
+                }
+                else {
+
+                    // Update polja naziv, vreme pripreme, vreme kuvanja i slike(tabela recepti):
+                    PreparedStatementCreatorFactory pscFactory = new PreparedStatementCreatorFactory(
+                            "UPDATE recepti \n" +
+                                    "SET naziv = ?, vreme_pripreme = ?, vreme_kuvanja = ?, slika = ? \n" +
+                                    "WHERE recept_id = ?",
+                            new int[]{Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.BLOB, Types.BIGINT});
+
+
+                    PreparedStatementCreator psc = pscFactory.newPreparedStatementCreator(
                             new Object[]{recept.getNaziv(), recept.getVremePripreme(),
                                     recept.getVremeKuvanja(), s,
                                     recept.getRecept_id()});
 
-                jdbcTemplate.update(psc);
+                    jdbcTemplate.update(psc);
+                }
+*/
 
                 //Obrisati sve postojece namirnice vezane za recept, pa insertovati nove iz argumenta recept
                 updateNamirnice(recept);
@@ -177,7 +198,7 @@ public class JdbcReceptRepository implements ReceptRepository{
         }
     }
 
-
+/*
     private boolean isImageFormatJpeg(InputStream is) throws IOException, NoImageReaderException  {
         ImageInputStream iis = ImageIO.createImageInputStream(is);
         // get all currently registered readers that recognize the image format
@@ -194,6 +215,64 @@ public class JdbcReceptRepository implements ReceptRepository{
         return format.equalsIgnoreCase("JPEG")? true : false;
     }
 
+    private boolean isJpeg(byte[] slika) {
+        boolean isJpeg = false;
+        if (slika != null) { // imam neki niz bajtova za sliku
+
+            // utvrdjivanje da li je fajl slika tipa jpg
+            try {
+                InputStream fileContent = new ByteArrayInputStream(slika);
+                isJpeg = isImageFormatJpeg(fileContent); // isImageFormatJpeg pokvari input stream
+                //fileContent = new ByteArrayInputStream(recept.getSlika());
+                System.out.println("ending try jpeg");
+            } catch (NoImageReaderException e) {
+                System.out.println(e.getMessage());
+                System.out.println("ending no image reader catch jpeg");
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return isJpeg;
+    }
+*/
+
+    @Override
+    public void removeSlika(Long recept_id){
+        System.out.println("uklanjam sliku iz recepta");
+
+        jdbcTemplate.update("UPDATE recepti \n " +
+                            "SET slika = NULL \n" +
+                            "WHERE recept_id = ?",
+                            recept_id);
+
+    }
+
+    // ako imamo jpg sliku snimiti je u bazu, a ako nemamo nista ne diraj
+    @Override
+    public void addSlika(Long recept_id, byte[] slika) {
+        System.out.println("snimam sliku u recept");
+/*
+        Object s = null;
+        if (isJpeg(slika)) {
+            LobHandler lobHandler = new DefaultLobHandler();
+            s = new SqlLobValue(slika, lobHandler);
+        }
+*/
+        LobHandler lobHandler = new DefaultLobHandler();
+        Object s = new SqlLobValue(slika, lobHandler);
+
+        PreparedStatementCreatorFactory pscFactory = new PreparedStatementCreatorFactory(
+                "UPDATE recepti \n" +
+                        "SET slika = ? \n" +
+                        "WHERE recept_id = ?",
+                new int[]{Types.BLOB, Types.BIGINT});
+
+        PreparedStatementCreator psc = pscFactory.newPreparedStatementCreator(
+                new Object[]{s, recept_id});
+
+        jdbcTemplate.update(psc);
+    }
 
 
     @Override
