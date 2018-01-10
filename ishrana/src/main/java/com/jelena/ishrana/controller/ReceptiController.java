@@ -331,4 +331,10 @@ public class ReceptiController {
         return isJpeg;
     }
 
+
+    @RequestMapping("/uploadStatus")
+    public String uploadStatus() {
+        return "uploadStatus";
+    }
+
 }
