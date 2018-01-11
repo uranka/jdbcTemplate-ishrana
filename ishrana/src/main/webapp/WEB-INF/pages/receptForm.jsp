@@ -76,10 +76,11 @@
 
         <tr>
                 <%--<td>msgSlikaRemoved: ${msgSlikaRemoved}</td>
-                   <input type="hidden" name="msgSlikaRemoved" value="${msgSlikaRemoved}">--%>
-            <td>msgSlikaExists: ${msgSlikaExists}</td>
+                   <input type="hidden" name="msgSlikaRemoved" value="${msgSlikaRemoved}">
+            <td>msgSlikaExists: ${msgSlikaExists}</td>--%>
+            <td><input type="hidden" name="msgSlikaExists" value="${msgSlikaExists}"></td>
             <td>${msgSlikaNotExist}</td>
-            <input type="hidden" name="msgSlikaExists" value="${msgSlikaExists}">
+
         </tr>
 
 
